@@ -2,38 +2,48 @@ const express = require("express");
 const router = express.Router();
 // const passwordHash = require('password-hash');
 const pool = require('../pool.js');
+var kafka = require('../kafka/client');
 
 router.post('/', (req, res) => {
     rating = parseInt((req.body.rating))
     console.log(rating)
-    let sql = `CALL add_reviews('${req.body.rest_id}', '${req.body.first_name}', '${req.body.last_name}', '${req.body.review}', '${req.body.date}', '${rating}');`;
-    pool.query(sql, (err, result) => {
-        console.log(result[0][0].status);
+    console.log(req.body.rest_id);
+    kafka.make_request("restSignUp_topic", { "path": "addRestReview", "id": req.body.rest_id, "body": req.body }, function (err, results) {
+      //console.log("In make request call back");
+      console.log(results);
       if (err) {
-        res.end("Error in Data");
+        console.log("Inside err");
+        console.log(err);
+        return res.status(err.status).send(err.message);
+      } else {
+        console.log("Inside else", results);
+        if (results.status === 200) {
+          return res.end(results.message);
+        } else {
+          return res.end(results.message);
+        }
       }
-      if (result && result.length > 0 && result[0][0].status === 'REVIEW_ADDED') {
-        res.end(result[0][0].status);
-      }
-    });
-  });
+    })
+    })
 
   router.get('/:rest_id', (req, res) => {
-    let sql = `CALL get_review('${req.params.rest_id}');`;
-    pool.query(sql, (err, result) => {
-        console.log(result);
-      if (err) {
-        res.writeHead(500, {
-          'Content-Type': 'text/plain'
-        });
-        res.end("Error in Data");
+    console.log(req.params.rest_id);
+  kafka.make_request("restSignUp_topic", { "path": "getRestReview", "body": req.params.rest_id}, function (err, results) {
+    console.log(results);
+    console.log("In make request call back", results);
+    if (err) {
+      console.log("Inside err");
+      console.log(err);
+      return res.status(err.status).send(err.message);
+    } else {
+      //console.log("Inside else", results);
+      if (results.status === 200) {
+        return res.status(results.status).send(results.data);
+      } else {
+        return res.status(results.status).send(results.errors);
       }
-      if (result && result.length > 0 && result[0][0]) {
-        res.writeHead(200, {
-          'Content-Type': 'text/plain'
-        });
-        res.end(JSON.stringify(result[0]));
-      }
-    });
-});
-  module.exports = router;
+    }
+  })
+})
+
+module.exports = router;

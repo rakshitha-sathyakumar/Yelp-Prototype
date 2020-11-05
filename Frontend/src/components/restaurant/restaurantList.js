@@ -6,6 +6,8 @@ import {Button, Card, CardGroup, Form} from 'react-bootstrap';
 import axios from 'axios';
 import backendServer from "../../backendServer";
 import MapContainer from '../maps'
+import ReactPaginate from 'react-paginate';
+import './pagination.css';
 
 const location = {
   address: '1600 Amphitheatre Parkway, Mountain View, california.',
@@ -20,7 +22,11 @@ class viewRest extends Component {
             restList: [],
             tempRestList: [],
             searchKeyword: null,
-            searchCategory: 0
+            searchCategory: 0,
+            offset: 0,
+            perPage: 1,
+            currentPage: 0,
+            pageCount: null
         };
         //console.log(props);
     }
@@ -104,8 +110,52 @@ handleClick = (e) => {
       this.setState({tempRestList: allOrders})
   }
 
+  handlePageClick = e => {
+    alert("inside handle");
+    const selectedPage = e.selected;
+    const offset = selectedPage * this.state.perPage;
+
+    this.setState({
+        currentPage: selectedPage,
+        offset: offset
+    }
+    );
+};
+
+componentWillReceiveProps(nextProps){
+    this.setState({
+      ...this.state,
+      tempRestList : !nextProps.tempRestList ? this.state.tempRestList : nextProps.tempRestList,
+      pageCount: Math.ceil(this.state.tempRestList.length / this.state.perPage)  
+    }
+   );	
+  }
+
     render() {
-      let renderRest = this.state.tempRestList.map(rest => {
+      console.log(this.state.tempRestList);
+
+        const count = this.state.tempRestList.length;
+        const slice = this.state.tempRestList.slice(this.state.offset, this.state.offset + this.state.perPage);
+
+        let paginationElement = (
+          <ReactPaginate
+            previousLabel={"← Previous"}
+            nextLabel={"Next →"}
+            breakLabel={<span className="gap">...</span>}
+            pageCount={Math.ceil(this.state.tempRestList.length / this.state.perPage) > 0 ? Math.ceil(this.state.tempRestList.length / this.state.perPage) : 1}
+            onPageChange={this.handlePageClick}
+            forcePage={this.state.currentPage}
+            containerClassName={"pagination"}
+            previousLinkClassName={"previous_page"}
+            nextLinkClassName={"next_page"}
+            disabledClassName={"disabled"}
+            activeClassName={"active"}
+          />
+        );
+
+      let renderRest;
+      if (this.state.tempRestList) {
+      renderRest = slice.map((rest, key) => {
           var fileName = rest.fileText
           var imgSrc = `${backendServer}/yelp/upload/restaurant/${fileName}`
             return (
@@ -114,11 +164,11 @@ handleClick = (e) => {
                         <Card.Img id = {rest.rest_id} name={rest.name} style={{height: "150px", width: "200px"}}variant="top" src={imgSrc} onClick={this.handleClick} />
                         <Card.Body>
                         <Card.Title variant="link">  
-                            <a id = {rest.rest_id} name={rest.name} onClick={this.handleClick}>{rest.name} </a>
+                            <a id = {rest._id} name={rest.name} onClick={this.handleClick}>{rest.name} </a>
                         </Card.Title>
                         <Card.Text> <i class="fas fa-location-arrow"></i> {rest.street}, {rest.city}, {rest.zipcode}</Card.Text>
                         <Card.Text> <i class="fas fa-bread-slice"></i> {rest.cuisine} </Card.Text>
-                        <Card.Text> <i class="fas fa-check" style={{color: "green"}}></i> {rest.delivery_method} </Card.Text>
+                        <Card.Text> <i class="fas fa-check" style={{color: "green"}}></i> {rest.deliveryMethod} </Card.Text>
                         {/* <Card.Text>{event.event_description}</Card.Text> */}
                         </Card.Body>
                     </Card>
@@ -126,6 +176,7 @@ handleClick = (e) => {
                 </div>
             )
         })
+      }
         return (
             <React.Fragment>
             <Navigationbar />
@@ -162,7 +213,10 @@ handleClick = (e) => {
                 {renderRest}
             </CardGroup> 
             </div>
-            <MapContainer restaurantlist={this.state.restList}></MapContainer> 
+            {/* <MapContainer restaurantlist={this.state.restList}></MapContainer>  */}
+            </div>
+            <div style={{paddingLeft: "45%"}}>
+              {paginationElement}
             </div>
             </React.Fragment>
         )}

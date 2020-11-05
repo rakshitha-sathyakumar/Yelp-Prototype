@@ -8,12 +8,18 @@ import { Link } from 'react-router-dom';
 import { Form, Button, Card, CardGroup} from 'react-bootstrap';
 import axios from 'axios';
 import backendServer from "../../../backendServer";
+import ReactPaginate from 'react-paginate';
+import '../pagination.css';
 
 export class getDessert extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            dessertList: []
+            dessertList: [],
+            offset: 0,
+            perPage: 2,
+            currentPage: 0,
+            pageCount: null
         };
     }
 
@@ -26,10 +32,52 @@ export class getDessert extends Component {
         });
     }
 
+    handlePageClick = e => {
+        alert("inside handle");
+        const selectedPage = e.selected;
+        const offset = selectedPage * this.state.perPage;
+
+        this.setState({
+            currentPage: selectedPage,
+            offset: offset
+        }
+        );
+    };
+
+    componentWillReceiveProps(nextProps){
+        this.setState({
+          ...this.state,
+          dessertList : !nextProps.dessertList ? this.state.dessertList : nextProps.dessertList,
+          pageCount: Math.ceil(this.state.dessertList.length / this.state.perPage)  
+        }
+       );	
+      }
+
     render () {
 
-       
-        let renderDessert = this.state.dessertList.map(menu => {
+        console.log(this.state.dessertList);
+
+        const count = this.state.dessertList.length;
+        const slice = this.state.dessertList.slice(this.state.offset, this.state.offset + this.state.perPage);
+
+        let paginationElement = (
+            <ReactPaginate
+              previousLabel={"← Previous"}
+              nextLabel={"Next →"}
+              breakLabel={<span className="gap">...</span>}
+              pageCount={Math.ceil(this.state.beverageList.length / this.state.perPage) > 0 ? Math.ceil(this.state.beverageList.length / this.state.perPage) : 10}
+              onPageChange={this.handlePageClick}
+              forcePage={this.state.currentPage}
+              containerClassName={"pagination"}
+              previousLinkClassName={"previous_page"}
+              nextLinkClassName={"next_page"}
+              disabledClassName={"disabled"}
+              activeClassName={"active"}
+            />
+          );
+        let renderDessert;
+        if(this.state.dessertList) {
+        renderDessert = slice.map((menu,key) => {
             var fileName = menu.fileText
             var imgSrc = `${backendServer}/yelp/upload/restaurant/${fileName}`
             return (
@@ -50,6 +98,7 @@ export class getDessert extends Component {
                 </div>
             )
         })
+        }
         return (
             <React.Fragment>
             <Navigationbar/>
@@ -58,6 +107,9 @@ export class getDessert extends Component {
                 <h1 style={{margin: "10px"}}> Desserts </h1>
                 </center>
                     {renderDessert}
+                <div>
+                {paginationElement}
+                </div>
             </div>
         </React.Fragment>
         )

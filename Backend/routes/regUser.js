@@ -2,25 +2,26 @@ const express = require("express");
 const router = express.Router();
 const passwordHash = require('password-hash');
 const pool = require('../pool.js');
+var kafka = require('../kafka/client');
 
 router.get('/:event_id', (req, res) => {
-    let sql = `CALL get_regUser('${req.params.event_id}');`;
-    pool.query(sql, (err, result) => {
-        console.log(result);
-      if (err) {
-        res.writeHead(500, {
-          'Content-Type': 'text/plain'
-        });
-        res.end("Error in Data");
+  console.log(req.params.event_id)
+  kafka.make_request("events_topic", { "path": "userRegList", "id": req.params.event_id}, function (err, results) {
+    console.log("In make request call back", results);
+    if (err) {
+      console.log("Inside err");
+      console.log(err);
+      return res.status(err.status).send(err.message);
+    } else {
+      console.log("Inside else");
+      console.log(results.data[0].registration);
+      if (results.status === 200) {
+        return res.status(results.status).send(results.data[0].registration);
+      } else {
+        return res.status(results.status).send(results.errors);
       }
-      if (result && result.length > 0 && result[0][0]) {
-        res.writeHead(200, {
-          'Content-Type': 'text/plain'
-        });
-        //console.log(result[0]);
-        res.end(JSON.stringify(result[0]));
-      }
-    });
-});
+    }
+  })
+})
 
 module.exports = router;

@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { getUser, updateUser } from '../../actions/userProfileAction';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
-import { Jumbotron, CardImg} from 'react-bootstrap';
+import { Jumbotron, CardImg, Button} from 'react-bootstrap';
 import YelpImage from './../images/yelp_logo.jpg'
 import axios from 'axios';
 import backendServer from "../../backendServer";
@@ -30,6 +30,26 @@ class restUserProfile extends Component {
     })
     }
 
+    handleFollowing = (e) => {
+        e.preventDefault();
+        const data = {
+            firstName: this.state.restUserProfile.firstName,
+            lastName: this.state.restUserProfile.lastName,
+            userId: this.state.restUserProfile._id,
+            address: this.state.restUserProfile.address
+        }
+        axios.post(`${backendServer}/yelp/userProfile/updateFollowing/${localStorage.getItem("user_id")}`, data)
+        .then(response => {
+            if(response.status ===200) {
+            alert("Following!!!");
+            window.location = '/allUsers'
+            }
+        })
+            .catch(err => {
+            console.log("Error");
+        });
+    }
+
     onChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
@@ -46,7 +66,18 @@ class restUserProfile extends Component {
 
 
     render() {
-        console.log("hi")
+        let renderFollow;
+        if (localStorage.getItem("user") === 'True') {
+            renderFollow = <div class='col-xs-4' style={{marginLeft: '1px'}}>
+            <ul class='list-unstyled'>
+                <li>
+                <Button href='/allUsers' style = {{margin:"25px 0px", marginLeft: "475px", backgroundColor: "red", border: 'none', fontSize: "17px", color: "white", outline: 'none'}} variant='link' onClick={this.handleFollowing}> <i class="fas fa-user-plus"></i> Follow</Button>
+                </li>
+            </ul>
+        
+       </div>
+        }
+        console.log("hi");
         console.log(this.props);
         return (
         <div style={{margin:"5px"}}>
@@ -54,24 +85,28 @@ class restUserProfile extends Component {
             <div class='jumbotron'>
                     <div class='row'>
                         <div class='col-xs-3 card profilePic' style={{position:"absolute"}}>
-                            <label for='profileImage'>
-                                    <a class='btn btn-secondary btn-sm btn-rounded'>
-                                        <i class='fas fa-camera'></i></a>
-                            </label>
-                            <input type='file' name='profileImage' id='profileImage' style={{ display: 'none' }} value='' onChange={this.changeProfileImage}></input>
                             <card>
                                 <CardImg variant='top' src={profilepic} className='profileImg'/>
                             </card>
                         </div>
                         <div class='col-xs-4 profileName' style={{position: "relative", marginLeft: "250px"}}>
-                            <h1>{this.state.restUserProfile.first_name} {this.state.restUserProfile.last_name}</h1>
+                            <h1>{this.state.restUserProfile.firstName} {this.state.restUserProfile.lastName}</h1>
                             <h6> "{this.state.restUserProfile.headline}" </h6>
                             <p style={{fontSize:"13px"}}>{this.state.restUserProfile.email}</p>
                             
                         </div>
+                        {/* <div class='col-xs-4' style={{marginLeft: '1px'}}>
+                            <ul class='list-unstyled'>
+                                <li>
+                                <Button href='/allUsers' style = {{margin:"25px 0px", marginLeft: "475px", backgroundColor: "red", border: 'none', fontSize: "17px", color: "white", outline: 'none'}} variant='link' onClick={this.handleFollowing}> <i class="fas fa-user-plus"></i> Follow</Button>
+                                </li>
+                            </ul>
+                        
+                       </div> */}
+                       {renderFollow}
                     </div>
             </div>
-             <div class='row' style={{ marginLeft:"10px"}}>
+            <div class='row' style={{ marginLeft:"10px"}}>
                 <div class='col-xs-3' style={{marginLeft: "250px"}}>
                     <h3 style={{color:'red'}}> Basic Information</h3>
                     <hr />
@@ -79,28 +114,28 @@ class restUserProfile extends Component {
                     <p> {this.state.restUserProfile.contactNo}</p>
                     <h5 style={{margin:"0px"}}> Gender </h5>
                     <p>{this.state.restUserProfile.gender} </p>
-                    <h5 style={{margin:"0px"}}> Address</h5>
+                    <h5 style={{margin:"0px"}}> Location</h5>
                     <p> {this.state.restUserProfile.address}</p>
                     <h5 style={{margin:"0px"}}> Birthday </h5>
-                    <p> {this.state.restUserProfile.dateofbirth}</p>
+                    <p> {this.state.restUserProfile.dateOfBirth}</p>
                 </div>
                 <div class='col-xs-12' style={{textAlign: "left", height: "100%", borderLeft: "1px solid #e6e6e6", marginLeft: "400px"}}>
                     <div style={{marginLeft: "10px"}}>
                         <h3 style={{color:'red'}}> About</h3>
                         <hr />
                         <h6 style={{margin:"0px"}}> Nickname </h6>
-                        <p> {this.state.restUserProfile.nickname}</p>
+                        <p> {this.state.restUserProfile.nickName}</p>
                         <h6 style={{margin:"0px"}}> Yelping since </h6>
-                        <p> {this.state.restUserProfile.yelpingsince}</p>
+                        <p> {this.state.restUserProfile.yelpingSince}</p>
                         <h6 style={{margin:"0px"}}> When I am not yelping... </h6>
-                        <p> {this.state.restUserProfile.notyelping} </p>
+                        <p> {this.state.restUserProfile.notYelping} </p>
                         <h6 style={{margin:"0px"}}> Things I love </h6>
-                        <p> {this.state.restUserProfile.thingsilove}</p>
+                        <p> {this.state.restUserProfile.thingsiLove}</p>
                         <h6 style={{margin:"0px"}}> My Blog or Website</h6>
                         <p>{this.state.restUserProfile.website}</p>
                     </div>
                 </div>
-                </div>
+            </div>
             </div>
     )}
 }

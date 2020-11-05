@@ -28,16 +28,20 @@ export class getRegUserList extends Component {
     }
 
     render () {
-        let renderRegUser = this.state.regUserList.map(user => {
+        console.log(this.state.regUserList);
+        let renderRegUser
+        if(this.state.regUserList) {
+        renderRegUser = this.state.regUserList.map(user => {
             return (
                 <div>
-                    <h4 > {user.first_name} {user.last_name}</h4>
+                    <h4 > {user.firstName} {user.lastName}</h4>
                     <button type="button" class="btn btn-danger">
-                    <Link to = {{pathname: `/userProfile/${user.user_id}`}} style={{color: "white"}}> View profile </Link> </button>
+                    <Link to = {{pathname: `/userProfile/${user.userId}`}} style={{color: "white"}}> View profile </Link> </button>
                     <hr />
                 </div>
             )
         })
+    }
         return (
             <React.Fragment>
             <Navigationbar/>

@@ -8,13 +8,20 @@ import { Link } from 'react-router-dom';
 import { Form, Button, Card, CardGroup} from 'react-bootstrap';
 import axios from 'axios';
 import backendServer from "../../../backendServer";
+import ReactPaginate from 'react-paginate';
+import '../pagination.css';
 
 export class getSalad extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            saladList: []
+            saladList: [],
+            offset: 0,
+            perPage: 5,
+            currentPage: 0,
+            pageCount: null
         };
+        this.handlePageClick = this.handlePageClick.bind(this);
     }
 
     componentDidMount() {
@@ -26,9 +33,53 @@ export class getSalad extends Component {
         });
     }
 
+    handlePageClick = e => {
+        alert("inside handle");
+        const selectedPage = e.selected;
+        const offset = selectedPage * this.state.perPage;
+
+        this.setState({
+            currentPage: selectedPage,
+            offset: offset
+        }
+        );
+
+    };
+
+
+
+    componentWillReceiveProps(nextProps){
+        this.setState({
+          ...this.state,
+          saladList : !nextProps.saladList ? this.state.saladList : nextProps.saladList,
+          pageCount: Math.ceil(this.state.saladList.length / this.state.perPage)  
+        }
+       );	
+      }
+
+
     render () {
-        console.log(this.state.saladList);
-        let renderSalad = this.state.saladList.map(menu => {
+        const count = this.state.saladList.length;
+        const slice = this.state.saladList.slice(this.state.offset, this.state.offset + this.state.perPage);
+
+          let paginationElement = (
+            <ReactPaginate
+              previousLabel={"← Previous"}
+              nextLabel={"Next →"}
+              breakLabel={<span className="gap">...</span>}
+              pageCount={Math.ceil(this.state.saladList.length / this.state.perPage) > 1 ? Math.ceil(this.state.saladList.length / this.state.perPage) : 10}
+              onPageChange={this.handlePageClick}
+              forcePage={this.state.currentPage}
+              containerClassName={"pagination"}
+              previousLinkClassName={"previous_page"}
+              nextLinkClassName={"next_page"}
+              disabledClassName={"disabled"}
+              activeClassName={"active"}
+            />
+          );
+        let renderSalad;
+        if(this.state.saladList){
+        renderSalad = slice.map((menu, key) => {
             var fileName = menu.fileText
             var imgSrc = `${backendServer}/yelp/upload/restaurant/${fileName}`
             return (
@@ -49,14 +100,18 @@ export class getSalad extends Component {
                 </div>
             )
         })
+        }
         return (
             <React.Fragment>
             <Navigationbar/>
-            <div class="container">
-                <center>
-                <h1 style={{margin: "10px"}}> Salads </h1>
-                </center>
-                    {renderSalad}
+            <div class='panel'>
+                {paginationElement}
+                <div class="container">
+                    <center>
+                        <h1 style={{margin: "10px"}}> Salads </h1>
+                    </center>
+                        {renderSalad}
+                </div>
             </div>
         </React.Fragment>
         )

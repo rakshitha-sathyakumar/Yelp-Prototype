@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { Form, Button, Card, CardGroup} from 'react-bootstrap';
 import axios from 'axios';
 import backendServer from '../../backendServer';
+import ReactPaginate from 'react-paginate';
+import '../restaurant/pagination.css';
 // import { getMainCourse } from './getMaincourse';
 
 export class userOrders extends Component {
@@ -12,7 +14,11 @@ export class userOrders extends Component {
         super(props);
         this.state = {
             userOrders: [],
-            tempUserOrders: []
+            tempUserOrders: [],
+            offset: 0,
+            perPage: 1,
+            currentPage: 0,
+            pageCount: null
         };
     }
 
@@ -58,19 +64,62 @@ export class userOrders extends Component {
           this.setState({tempUserOrders: allOrders})
       }
 
+      handlePageClick = e => {
+        alert("inside handle");
+        const selectedPage = e.selected;
+        const offset = selectedPage * this.state.perPage;
+
+        this.setState({
+            currentPage: selectedPage,
+            offset: offset
+        }
+        );
+    };
+
+    componentWillReceiveProps(nextProps){
+        this.setState({
+          ...this.state,
+          beverageList : !nextProps.tempUserOrders ? this.state.tempUserOrders : nextProps.tempUserOrders,
+          pageCount: Math.ceil(this.state.tempUserOrders.length / this.state.perPage)  
+        }
+       );	
+      }
+
     render () {
+        console.log(this.state.tempUserOrders);
+
+        const count = this.state.tempUserOrders.length;
+        const slice = this.state.tempUserOrders.slice(this.state.offset, this.state.offset + this.state.perPage);
+
+        let paginationElement = (
+            <ReactPaginate
+              previousLabel={"← Previous"}
+              nextLabel={"Next →"}
+              breakLabel={<span className="gap">...</span>}
+              pageCount={Math.ceil(this.state.tempUserOrders.length / this.state.perPage) > 0 ? Math.ceil(this.state.tempUserOrders.length / this.state.perPage) : 1}
+              onPageChange={this.handlePageClick}
+              forcePage={this.state.currentPage}
+              containerClassName={"pagination"}
+              previousLinkClassName={"previous_page"}
+              nextLinkClassName={"next_page"}
+              disabledClassName={"disabled"}
+              activeClassName={"active"}
+            />
+          );
+          let renderOrders;
+          if(this.state.tempUserOrders) {
         // console.log(this.state.yourOrders);
-        let renderOrders = this.state.tempUserOrders.map(order => {
+        renderOrders = slice.map(order => {
             return (
                 <div>
                     <Card style={{border: "none"}}>
-                        <Card.Title style={{marginLeft:"10px", fontSize: "25px"}}>{order.dish_name} </Card.Title>
-                        <Card.Text> <span style={{fontWeight: "bold", marginLeft:"10px"}}>Restuarant:</span> {order.rest_name}</Card.Text>
-                        <Card.Text> <span style={{fontWeight: "bold", marginLeft:"10px"}}>Order type:</span> {order.order_type}</Card.Text>
+                        <Card.Title style={{marginLeft:"10px", fontSize: "25px"}}>{order.dishName} </Card.Title>
+                        <Card.Text> <span style={{fontWeight: "bold", marginLeft:"10px"}}>Restuarant:</span> {order.restName}</Card.Text>
+                        <Card.Text> <span style={{fontWeight: "bold", marginLeft:"10px"}}>Order type:</span> {order.orderType}</Card.Text>
                         <Card.Text> <span style={{fontWeight: "bold", marginLeft:"10px"}}> Order date </span> {order.date}</Card.Text>
                         <Card.Text> <span style={{fontWeight: "bold", marginLeft:"10px"}}> Order time </span> {order.time}</Card.Text>
-                        <Card.Text> <span style={{fontWeight: "bold", marginLeft:"10px"}}>Order status:</span> {order.order_status} </Card.Text>
-                        <Button style={{backgroundColor: "red", border:"1px solid red", marginLeft:"10px"}} id={order.order_id} name=' Cancelled' onClick={this.handleCancel}> Cancel Order </Button>
+                        <Card.Text> <span style={{fontWeight: "bold", marginLeft:"10px"}}>Order status:</span> {order.orderStatus} </Card.Text>
+                        <Button style={{backgroundColor: "red", border:"1px solid red", marginLeft:"10px"}} id={order._id} name=' Cancelled' onClick={this.handleCancel}> Cancel Order </Button>
                     </Card>
                     <hr />
                     <br/>
@@ -78,6 +127,7 @@ export class userOrders extends Component {
                 </div>
             )
         })
+    }
         
         return (
             <React.Fragment>
@@ -132,6 +182,9 @@ export class userOrders extends Component {
                         />
                         <Button style={{marginLeft:"10px", marginTop: "10px", backgroundColor: "red", border: "1px solid red" }} type="submit" onClick={this.handleReset}> Remove filters </Button>
                         </Form>
+                    </div>
+                    <div style={{paddingTop:'500px', paddingLeft: "400px"}}>
+                        {paginationElement}
                     </div>
                        
                 </div>

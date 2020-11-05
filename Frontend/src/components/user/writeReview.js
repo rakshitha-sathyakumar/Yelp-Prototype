@@ -37,8 +37,8 @@ onSubmit = (e) => {
   e.preventDefault();
   const data = {
     rest_id: localStorage.getItem("rest_id"),
-    first_name: localStorage.getItem("first_name"),
-    last_name: localStorage.getItem("last_name"),
+    firstName: localStorage.getItem("first_name"),
+    lastName: localStorage.getItem("last_name"),
     review: this.state.review,
     date: current_date,
     rating: this.state.rating

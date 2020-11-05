@@ -8,6 +8,8 @@ import { Link } from 'react-router-dom';
 import { Form, Button, Card, CardGroup} from 'react-bootstrap';
 import axios from 'axios';
 import backendServer from '../../backendServer';
+import ReactPaginate from 'react-paginate';
+import './pagination.css';
 // import { getMainCourse } from './getMaincourse';
 
 export class restOrders extends Component {
@@ -15,7 +17,11 @@ export class restOrders extends Component {
         super(props);
         this.state = {
             restOrders: [],
-            tempRestOrder: []
+            tempRestOrder: [],
+            offset: 0,
+            perPage: 1,
+            currentPage: 0,
+            pageCount: null
         };
     }
 
@@ -47,11 +53,32 @@ export class restOrders extends Component {
         //this.setState({orders: e.target.id})
         let orders = e.target.id;
         let filteredData = this.state.restOrders.filter(order =>
-            order.orders == orders
+            order.finalOrderStatus == orders
         );
         console.log(filteredData);
         this.setState({tempRestOrder:filteredData});
     }
+
+    handlePageClick = e => {
+        alert("inside handle");
+        const selectedPage = e.selected;
+        const offset = selectedPage * this.state.perPage;
+
+        this.setState({
+            currentPage: selectedPage,
+            offset: offset
+        }
+        );
+    };
+
+    componentWillReceiveProps(nextProps){
+        this.setState({
+          ...this.state,
+          beverageList : !nextProps.tempRestOrder ? this.state.tempRestOrder : nextProps.tempRestOrder,
+          pageCount: Math.ceil(this.state.tempRestOrder.length / this.state.perPage)  
+        }
+       );	
+      }
 
 
     onUpdate = (e) => {
@@ -83,43 +110,66 @@ export class restOrders extends Component {
       }
 
     render () {
-        let renderOrders = this.state.tempRestOrder.map(order => {
+        console.log(this.state.tempRestOrder);
+
+        const count = this.state.tempRestOrder.length;
+        const slice = this.state.tempRestOrder.slice(this.state.offset, this.state.offset + this.state.perPage);
+
+        let paginationElement = (
+            <ReactPaginate
+              previousLabel={"← Previous"}
+              nextLabel={"Next →"}
+              breakLabel={<span className="gap">...</span>}
+              pageCount={Math.ceil(this.state.tempRestOrder.length / this.state.perPage) > 0 ? Math.ceil(this.state.tempRestOrder.length / this.state.perPage) : 10}
+              onPageChange={this.handlePageClick}
+              forcePage={this.state.currentPage}
+              containerClassName={"pagination"}
+              previousLinkClassName={"previous_page"}
+              nextLinkClassName={"next_page"}
+              disabledClassName={"disabled"}
+              activeClassName={"active"}
+            />
+          );
+
+          let renderOrders;
+          if(this.state.tempRestOrder) {
+            renderOrders = slice.map((order,key) => {
             let button1;
             let button2;
-            if(order.order_type === 'pickup'){
-                button1 = <Form.Check id = {order.order_id} name={order.dish_name} label='Pickup ready' 
+            if(order.orderType === 'pickup'){
+                button1 = <Form.Check id = {order._id} name={order.dishName} label='Pickup ready' 
                             value='Pickup ready' onChange={this.handleCheckboxChange} style={{marginLeft:"10px", color: 'red' }}/>
-                button2 = <Form.Check id = {order.order_id} name={order.dish_name} label='Picked up' 
+                button2 = <Form.Check id = {order._id} name={order.dishName} label='Picked up' 
                     value='Picked up' onChange={this.handleCheckboxChange} style={{marginLeft:"10px", color: 'red' }}/>
             } else {
-                button1 = <Form.Check id = {order.order_id} name={order.dish_name} label='On the way' 
+                button1 = <Form.Check id = {order._id} name={order.dishName} label='On the way' 
                             value='On the way' onChange={this.handleCheckboxChange} style={{marginLeft:"10px", color: 'red' }}/>
-                button2 = <Form.Check id = {order.order_id} name={order.dish_name} label='Delivered' 
+                button2 = <Form.Check id = {order._id} name={order.dishName} label='Delivered' 
                     value='Delivered' onChange={this.handleCheckboxChange} style={{marginLeft:"10px", color: 'red' }}/>
             }
             return (
                 <div>
                     <Card style={{border: "none"}}>
-                        <Card.Title style={{marginLeft:"10px", fontSize: "25px"}}>{order.dish_name} </Card.Title>
+                        <Card.Title style={{marginLeft:"10px", fontSize: "25px"}}>{order.dishName} </Card.Title>
                         <Card.Text><span style={{fontWeight: "bold", marginLeft:"10px"}}> Customer: </span>
-                            <Link to = {{pathname: `/userProfile/${order.user_id}`}}> {order.first_name} {order.last_name} </Link> </Card.Text>
+                            <Link to = {{pathname: `/userProfile/${order.userId}`}}> {order.firstName} {order.lastName} </Link> </Card.Text>
                         {/* <Card.Text> <span style={{fontWeight: "bold", marginLeft:"10px"}}>Restuarant:</span> {order.rest_name}</Card.Text> */}
-                        <Card.Text> <span style={{fontWeight: "bold", marginLeft:"10px"}}>Order type:</span> {order.order_type}</Card.Text>
-                        <Card.Text> <span style={{fontWeight: "bold", marginLeft:"10px"}}>Order Status:</span> {order.order_status}</Card.Text>
-                        <Card.Text> <span style={{fontWeight: "bold", marginLeft:"10px"}}>Orders:</span> {order.orders} </Card.Text>
+                        <Card.Text> <span style={{fontWeight: "bold", marginLeft:"10px"}}>Order type:</span> {order.orderType}</Card.Text>
+                        <Card.Text> <span style={{fontWeight: "bold", marginLeft:"10px"}}>Order Status:</span> {order.orderStatus}</Card.Text>
+                        <Card.Text> <span style={{fontWeight: "bold", marginLeft:"10px"}}>Orders:</span> {order.finalOrderStatus} </Card.Text>
                         <hr />
                         <Form onSubmit={this.onUpdate}>
                             <Form.Check
-                                id = {order.order_id}
-                                name={order.dish_name}
+                                id = {order._id}
+                                name={order.dishName}
                                 label='Order received'
                                 value='Order received'
                                 onChange={this.handleCheckboxChange}
                                 style={{marginLeft:"10px", color: 'red' }}
                             />
                             <Form.Check
-                                id = {order.order_id}
-                                name={order.dish_name}
+                                id = {order._id}
+                                name={order.dishName}
                                 label='Preparing'
                                 value='Preparing'
                                 onChange={this.handleCheckboxChange}
@@ -139,6 +189,7 @@ export class restOrders extends Component {
                 </div>
             )
         })
+    }
         return (
             <React.Fragment>
                 <Navigationbar/>
@@ -174,8 +225,12 @@ export class restOrders extends Component {
                         <Button style={{marginLeft:"10px", marginTop: "10px", backgroundColor: "red", border: "1px solid red" }} type="submit" onClick={this.handleReset}> Remove filter </Button>
                         </Form>
                     </div>
+                    <div style = {{paddingTop: "500px", paddingLeft: "40%"}}>
+                {paginationElement}
+                </div>
 
                 </div>
+                
             </React.Fragment>
         )
     }

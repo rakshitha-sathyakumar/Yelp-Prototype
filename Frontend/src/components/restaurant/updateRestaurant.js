@@ -71,10 +71,10 @@ handleUpdate = (e) => {
     city: e.target.city.value,
     zipcode: e.target.zipcode.value,
     email: e.target.email.value,
-    contact_info: e.target.contact_info.value,
+    contactNo: e.target.contact_info.value,
     timings: e.target.timings.value,
     cuisine: e.target.cuisine.value,
-    delivery_method: e.target.delivery.value,
+    deliveryMethod: e.target.delivery.value,
     fileText: this.state.fileText
   }
   this.props.updateRest(data);
@@ -144,7 +144,7 @@ handleUpdate = (e) => {
                   <Form.Text style={{margin: "0px", padding: "0px"}} className='text-muted'>
                     This field is required.
                   </Form.Text>
-                  <Form.Control name="contact_info" onChange={this.onChange} defaultValue={this.props.user.contact_info} type='text' />
+                  <Form.Control name="contact_info" onChange={this.onChange} defaultValue={this.props.user.contactNnfo} type='text' />
                 </Form.Group>
                 <Form.Group controlId='email'>
                   <Form.Label style={{margin: "0px", padding: "0px"}}>
@@ -180,14 +180,14 @@ handleUpdate = (e) => {
                   <Form.Text style={{margin: "0px", padding: "0px"}} className='text-muted'>
                   This field is required.
                   </Form.Text>
-                  <Form.Control name="delivery" onChange={this.onChange} defaultValue={this.props.user.delivery_method}type='text' />
+                  <Form.Control name="delivery" onChange={this.onChange} defaultValue={this.props.user.deliveryMethod}type='text' />
                 </Form.Group>
                 <Form.Group>
                     <Form.Label>
                         <strong>Add a photo</strong>
                     </Form.Label>
                     <div class="custom-file">
-                    <input type="file" name="image" accept="image/*" onChange={this.onImageChange} required/>
+                    <input type="file" name="image" accept="image/*" onChange={this.onImageChange}/>
                   </div>
                 </Form.Group>
                 <Button style={{backgroundColor: "red", border: "1px solid red"}} onClick={this.handleImageUpload}>

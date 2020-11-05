@@ -8,27 +8,76 @@ import { Link } from 'react-router-dom';
 import { Form, Button, Card, CardGroup} from 'react-bootstrap';
 import axios from 'axios';
 import backendServer from '../../../backendServer';
+import ReactPaginate from 'react-paginate';
+import '../pagination.css';
 // import { getMainCourse } from './getMaincourse';
+
 
 export class getBeverage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            beverageList: []
+            beverageList: [],
+            offset: 0,
+            perPage: 2,
+            currentPage: 0,
+            pageCount: null
         };
     }
 
     componentDidMount() {
-        axios.get(`${backendServer}/yelp/viewMenu/beverage/${localStorage.getItem("rest_id")}`)
+        axios.get(`${backendServer}/yelp/viewMenu/Beverage/${localStorage.getItem("rest_id")}`)
         .then(res => {
-            //console.log(res.data)
             this.setState({ beverageList: res.data });
-            //console.log(this.state.appetizerList);
         });
     }
 
+    handlePageClick = e => {
+        alert("inside handle");
+        const selectedPage = e.selected;
+        const offset = selectedPage * this.state.perPage;
+
+        this.setState({
+            currentPage: selectedPage,
+            offset: offset
+        }
+        );
+    };
+
+    componentWillReceiveProps(nextProps){
+        this.setState({
+          ...this.state,
+          beverageList : !nextProps.beverageList ? this.state.beverageList : nextProps.beverageList,
+          pageCount: Math.ceil(this.state.beverageList.length / this.state.perPage)  
+        }
+       );	
+      }
+
     render () {
-        let renderBeverage = this.state.beverageList.map(menu => {
+        console.log(this.state.beverageList);
+
+        const count = this.state.beverageList.length;
+        const slice = this.state.beverageList.slice(this.state.offset, this.state.offset + this.state.perPage);
+
+        let paginationElement = (
+            <ReactPaginate
+              previousLabel={"← Previous"}
+              nextLabel={"Next →"}
+              breakLabel={<span className="gap">...</span>}
+              pageCount={Math.ceil(this.state.beverageList.length / this.state.perPage) > 0 ? Math.ceil(this.state.beverageList.length / this.state.perPage) : 10}
+              onPageChange={this.handlePageClick}
+              forcePage={this.state.currentPage}
+              containerClassName={"pagination"}
+              previousLinkClassName={"previous_page"}
+              nextLinkClassName={"next_page"}
+              disabledClassName={"disabled"}
+              activeClassName={"active"}
+            />
+          );
+
+        let renderBeverage;
+        if (this.state.beverageList) {
+            renderBeverage = slice.map((menu,key) => {
             var fileName = menu.fileText
             var imgSrc = `${backendServer}/yelp/upload/restaurant/${fileName}`
             return (
@@ -49,6 +98,7 @@ export class getBeverage extends Component {
                 </div>
             )
         })
+        }
         return (
             <React.Fragment>
                 <Navigationbar/>
@@ -57,6 +107,9 @@ export class getBeverage extends Component {
                     <h1 style={{margin: "10px"}}> Beverages </h1>
                     </center>
                         {renderBeverage}
+                    <center>
+                    {paginationElement}
+                    </center>
         
                 </div>
             </React.Fragment>

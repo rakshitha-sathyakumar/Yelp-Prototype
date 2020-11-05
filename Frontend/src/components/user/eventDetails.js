@@ -20,16 +20,15 @@ export class eventDetails extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         const data = {
-            event_id: this.state.eventDetails.event_id,
-            first_name: localStorage.getItem("first_name"),
-            last_name: localStorage.getItem("last_name"),
-            event_name: this.state.eventDetails.event_name,
-            user_id: localStorage.getItem("user_id")
+            event_id: this.state.eventDetails._id,
+            firstName: localStorage.getItem("first_name"),
+            lastName: localStorage.getItem("last_name"),
+            userId: localStorage.getItem("user_id")
         }
         return axios.post(`${backendServer}/yelp/addEvent/update`,data)
         .then((response) => {
             if (response.status === 200) {
-                alert("Event added")
+                alert("Registered successfully")
                 window.location = '/allEvents'
             }
         })
@@ -41,24 +40,25 @@ export class eventDetails extends Component {
     componentDidMount() {
         axios.get(`${backendServer}/yelp/viewEvents/eventDetails/${this.props.match.params.event_id}`)
         .then(res => {
-            this.setState({ eventDetails: res.data[0] });
-            console.log(this.state.eventDetails);
+            this.setState({ eventDetails: res.data });
+            console.log(this.state.eventDetails._id);
         });
     }
 
     render () {
+        console.log(this.state.eventDetails)
         return (
             <React.Fragment>
                 <Navigationbar/>
                 <div class="container">
                     <div class="container">
                         <center>
-                        <h1 style={{margin: "10px"}}> {this.state.eventDetails.event_name} </h1>
+                        <h1 style={{margin: "10px"}}> {this.state.eventDetails.eventName} </h1>
                         <hr />
                         <h6 style={{margin: "10px"}}> <i class="fas fa-calendar-day"></i> {this.state.eventDetails.date}</h6>
                         <h6> <i class="fas fa-hourglass"></i> {this.state.eventDetails.time} </h6>
-                        <h6> <i class="fas fa-map-pin"></i> {this.state.eventDetails.event_location} </h6>
-                        <p> {this.state.eventDetails.event_description}</p>
+                        <h6> <i class="fas fa-map-pin"></i> {this.state.eventDetails.eventLocation} </h6>
+                        <p> {this.state.eventDetails.eventDescription}</p>
                         <p> {this.state.eventDetails.hashtags}</p>
                         <Button style={{backgroundColor:"red", border: "1px solid red"}}onClick = {this.handleSubmit} > Register </Button>
                         </center>

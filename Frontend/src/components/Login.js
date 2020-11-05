@@ -6,6 +6,8 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { userLogin } from '../actions/loginAction'
 import yelpLoginImage from './images/yelp_logo.jpg';
+import jwt_decode from 'jwt-decode';
+//const jwt_decode = require('jwt-decode');
 
 class Login extends Component {
     //call the constructor method
@@ -14,6 +16,12 @@ class Login extends Component {
         super(props);
         //maintain the state required for this component
         this.state = {};
+    }
+
+    componentWillMount() {
+        this.setState({
+            authFlag: false
+        })
     }
 
     onChange = (e) => {
@@ -31,30 +39,44 @@ class Login extends Component {
         }
 
         this.props.userLogin(data);
+        console.log(this.props.user);
         this.setState({
+            authFlag: true,
             loginFlag: 1
         });
     }
     render() {
         console.log(this.props);
+        var userLogin = 'True';
+        var restLogin = 'False';
         let redirectVar = null;
         let message = ""
-        if(this.props.user && this.props.user.user_id){
-            localStorage.setItem("user", 'True')
-            localStorage.setItem("email_id", this.props.user.email);
-            localStorage.setItem("first_name", this.props.user.first_name);
-            localStorage.setItem("user_id", this.props.user.user_id);
-            localStorage.setItem("last_name", this.props.user.last_name);
+        if(this.props.user && this.props.user.firstName)
+        {
+            localStorage.setItem("user", userLogin)
+            localStorage.setItem("token", this.props.user.token)
+
+            var decoded = jwt_decode(this.props.user.token.split(' ')[1]);
+            localStorage.setItem("email_id", decoded.email);
+            localStorage.setItem("first_name", this.props.user.firstName);
+            localStorage.setItem("user_id", decoded._id);
+            localStorage.setItem("last_name", this.props.user.lastName);
+            //localStorage.setItem("user", 'True'),
             // localStorage.setItem("rest_name", this.props.user.name);
             // localStorage.setItem("rest_id", this.props.user.rest_id);
             
             redirectVar = <Redirect to="/home" />
-        } else if (this.props.user && this.props.user.rest_id)
+        } else if (this.props.user && this.props.user.name)
         {
-            localStorage.setItem("user", 'False');
-            localStorage.setItem("rest_id", this.props.user.rest_id);
+
+            localStorage.setItem("user", restLogin)
+            localStorage.setItem("token", this.props.user.token)
+
+            decoded = jwt_decode(this.props.user.token.split(' ')[1]);
+            localStorage.setItem("rest_id", decoded._id);
             localStorage.setItem("rest_name", this.props.user.name);
-            localStorage.setItem("rest_email", this.props.user.email);
+            localStorage.setItem("rest_email", decoded.email);
+            //localStorage.setItem("user", 'False');
 
             redirectVar =<Redirect to="/restaurant" />
         }
@@ -64,7 +86,7 @@ class Login extends Component {
         else if(this.props.user === "INCORRECT_PASSWORD" && this.state.loginFlag){
             message = "Incorrect Password";
         }
-        console.log(this.props);
+        console.log(redirectVar)
         return (
             <div>
                 {redirectVar}

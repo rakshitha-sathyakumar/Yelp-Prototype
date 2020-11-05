@@ -9,6 +9,8 @@ import { Link } from 'react-router-dom';
 import { Form, Button} from 'react-bootstrap';
 import axios from 'axios';
 import backendServer from "../../backendServer";
+import {addEvent} from '../../actions/eventAction';
+import { connect } from 'react-redux';
 
 class addEvents extends Component {
   constructor(props) {
@@ -49,21 +51,30 @@ onSubmit = (e) => {
     location: this.state.location,
     hashtag: this.state.hashtag
   }
-  return axios.post(`${backendServer}/yelp/addEvent`,data)
-  .then((response) => {
-    console.log(response.status)
-    if (response.status === 200) {
-      alert("Event added")
-      window.location = "/events"
-    }
-  })
-  .catch(function(error) {
-     alert("Error")
-  })
+
+  this.props.addEvent(data)
+  // return axios.post(`${backendServer}/yelp/addEvent`,data)
+  // .then((response) => {
+  //   console.log(response.status)
+  //   if (response.status === 200) {
+  //     alert("Event added")
+  //     window.location = "/events"
+  //   }
+  // })
+  // .catch(function(error) {
+  //    alert("Error")
+  // })
 }
     render() {
+      let redirectVar = null;
+      if (this.props.event === 'EVENT_ADDED') {
+        alert("The event has been added successfully");
+        redirectVar = <Redirect to="/events" />
+      }
+      console.log(this.props)
       return (
         <React.Fragment>
+          {redirectVar}
           <Navigationbar />
           <div class='container'>
             <div class='row'>
@@ -141,4 +152,18 @@ onSubmit = (e) => {
     }
   }
 
-  export default addEvents;
+
+  addEvents.propTypes = {
+    addEvent: PropTypes.func.isRequired,
+    event: PropTypes.object.isRequired
+  };
+
+  const mapStateToProps = state => ({
+    event: state.events.event
+
+  });
+
+  export default connect(mapStateToProps, { addEvent })(addEvents);
+
+  //export default updateDishes;
+  //export default addEvents;

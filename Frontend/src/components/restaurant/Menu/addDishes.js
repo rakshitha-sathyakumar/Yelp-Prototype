@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import Navigationbar from '../../navigation';
-// import userProfile from './profile';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import PropTypes from 'prop-types';
-//import profilepic from '../../images/download.png'
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Form, Button} from 'react-bootstrap';
 import axios from 'axios';
 import backendServer from "../../../backendServer";
+import {addDish} from '../../../actions/dishAction';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import Navigationbar from '../../navigation';
 
 class updateDishes extends Component {
   constructor(props) {
@@ -69,29 +69,36 @@ onSubmit = (e) => {
   e.preventDefault();
   const data = {
     rest_id: localStorage.getItem("rest_id"),
-    dish_name: this.state.dish_name,
+    dishName: this.state.dish_name,
     ingredients: this.state.ingredients,
     price: this.state.price,
     description: this.state.description,
     category: this.state.category,
-    fileText: this.state.fileText
+    dishFileName: this.state.fileText
   }
-  console.log(data)
-  return axios.post(`${backendServer}/yelp/addDish`,data)
-  .then((response) => {
-    if (response.status === 200) {
-      alert("Dish added")
-      window.location = "/restaurant"
-    }
-  })
-  .catch(function(error) {
-     alert("Error")
-  })
+
+  this.props.addDish(data);
+  // console.log(data)
+  // return axios.post(`${backendServer}/yelp/addDish`,data)
+  // .then((response) => {
+  //   if (response.status === 200) {
+  //     alert("Dish added")
+  //     window.location = "/restaurant"
+  //   }
+  // })
+  // .catch(function(error) {
+  //    alert("Error")
+  // })
 }
     render() {
-      console.log(this.state.fileText)
+      let redirectVar = null;
+      if (this.props.user === 'DISH_ADDED') {
+        alert("The dish has been added successfully");
+        redirectVar = <Redirect to="/restaurant" />
+      } 
       return (
         <React.Fragment>
+          {redirectVar}
           <Navigationbar />
           <div class='container'>
             <div class='row'>
@@ -173,4 +180,17 @@ onSubmit = (e) => {
     }
   }
 
-  export default updateDishes;
+
+  updateDishes.propTypes = {
+    addDish: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired
+  };
+
+  const mapStateToProps = state => ({
+    user: state.addDish.user
+
+  });
+
+  export default connect(mapStateToProps, { addDish })(updateDishes);
+
+  //export default updateDishes;

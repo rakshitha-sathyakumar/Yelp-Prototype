@@ -13,13 +13,13 @@ export class getDish extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            menuList: [],
+            menuList: []
         };
         //this.changeHandler = this.changeHandler.bind(this);
         this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
     }
 
-    componentWillMount() {
+    componentDidMount() {
         axios.get(`${backendServer}/yelp/viewMenu/${localStorage.getItem("rest_id")}`)
         .then(res => {
             //console.log(res.data)
@@ -34,7 +34,7 @@ export class getDish extends Component {
             orderType: e.target.value
         })
         this.setState({
-            dish_name: e.target.name
+            dishName: e.target.name
         })
         this.setState({
           dish_id: e.target.id
@@ -51,7 +51,7 @@ export class getDish extends Component {
             rest_id: localStorage.getItem("rest_id"),
             rest_name: localStorage.getItem("rest_name"),
             dish_id: this.state.dish_id,
-            dish_name: this.state.dish_name,
+            dish_name: this.state.dishName,
             order_type: this.state.orderType,
             first_name: localStorage.getItem("first_name"),
             last_name: localStorage.getItem("last_name"),
@@ -73,12 +73,12 @@ export class getDish extends Component {
       }
     
     render () {
-        // console.log(this.state.saladList);
+        console.log(this.state.menuList);
         let renderMenu = this.state.menuList.map(menu => {
             return (
                 <div class="container">
                     <Card style={{marginLeft: "25px", border: "none"}}>
-                        <Card.Title style={{fontSize: "25px", fontWeight: "bold", marginLeft:"10px"}}>{menu.dish_name} </Card.Title>
+                        <Card.Title style={{fontSize: "25px", fontWeight: "bold", marginLeft:"10px"}}>{menu.dishName} </Card.Title>
                         <hr />
                         <Card.Text style={{marginLeft:"10px"}}> <span style={{fontWeight: "bold"}}>Category:</span> {menu.category} </Card.Text>
                         <Card.Text style={{marginLeft:"10px"}}><span style={{fontWeight: "bold"}}>Ingredients:</span> {menu.ingredients}</Card.Text>
@@ -88,7 +88,7 @@ export class getDish extends Component {
                         <div>
                         <Form.Check
                             id = {menu.dish_id}
-                            name={menu.dish_name}
+                            name={menu.dishName}
                             label='Delivery'
                             value='delivery'
                             onChange={this.handleCheckboxChange}
@@ -96,7 +96,7 @@ export class getDish extends Component {
                         />
                         <Form.Check
                             id = {menu.dish_id}
-                            name={menu.dish_name}
+                            name={menu.dishName}
                             label='Pickup'
                             value='pickup'
                             onChange={this.handleCheckboxChange}

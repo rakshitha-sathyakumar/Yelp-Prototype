@@ -62,17 +62,17 @@ export class getAllEvents extends Component {
     }
 
     render () {
-        console.log(this.state.searchEventList);
+        console.log(this.state.eventList);
         let renderEvents = this.state.eventList.map(event => {
             return (
                 <div>
                     <Card style={{borderBottom: "none", borderLeft: "none"}}>
-                        <Card.Title style={{margin: "10px", fontSize: "25px"}}>{event.event_name} </Card.Title>
+                        <Card.Title style={{margin: "10px", fontSize: "25px"}}>{event.eventName} </Card.Title>
                         <Card.Text style={{margin: "10px"}}> <i class="fas fa-calendar-day"></i> {event.date}</Card.Text>
                         <Card.Text style={{margin: "10px"}}> <i class="fas fa-hourglass"></i> {event.time}</Card.Text>
                         <div>
                         <Button style={{backgroundColor: "red", border: "1px solid red", margin: "10px"}}>
-                        <Link to = {{pathname: `/event/${event.event_id}`}} style={{color: "white"}}> View details </Link></Button>
+                        <Link to = {{pathname: `/event/${event._id}`}} style={{color: "white"}}> View details </Link></Button>
                         </div>
                     </Card>
                     <br/>
@@ -83,10 +83,10 @@ export class getAllEvents extends Component {
         let renderRegEvents = this.state.userRegList.map(reg => {
             return (
                 <div>
-                    <h4> {reg.event_name} </h4><br/>
+                    <h4> {reg.eventName} </h4><br/>
                     <h6> <i class="fas fa-hourglass"></i> {reg.time} </h6>
                     <h6>  <i class="fas fa-calendar-day"></i> {reg.date} </h6>
-                    <h6> <i class="fas fa-map-pin"> </i> {reg.event_location} </h6>
+                    <h6> <i class="fas fa-map-pin"> </i> {reg.eventLocation} </h6>
                     <hr />
                 </div>
             )
@@ -96,12 +96,12 @@ export class getAllEvents extends Component {
             return (
                 <div>
                     <Card style={{borderBottom: "none", borderLeft: "none"}}>
-                        <Card.Title style={{margin: "10px", fontSize: "25px"}}>{search.event_name} </Card.Title>
+                        <Card.Title style={{margin: "10px", fontSize: "25px"}}>{search.eventName} </Card.Title>
                         <Card.Text style={{margin: "10px"}}> <i class="fas fa-calendar-day"></i> {search.date}</Card.Text>
                         <Card.Text style={{margin: "10px"}}> <i class="fas fa-hourglass"></i> {search.time}</Card.Text>
                         <div>
                         <Button style={{backgroundColor: "red", border: "1px solid red", margin: "10px"}}>
-                        <Link to = {{pathname: `/event/${search.event_id}`}} style={{color: "white"}}> View details </Link></Button>
+                        <Link to = {{pathname: `/event/${search._id}`}} style={{color: "white"}}> View details </Link></Button>
                         </div>
                     </Card>
                     <br/>
@@ -153,17 +153,6 @@ export class getAllEvents extends Component {
                     <img src = {yelpLoginImage} width="150" height="85" alt=""/>
                 </a>
                 <form class="form-inline mx-auto">
-                    {/* <select
-                        class='custom-select input-group'
-                        id='inputGroupSelect02'
-                        onChange={this.handleInputChange}>
-                        <option selected>Search...</option>
-                        <option value='1'>Mode of delivery</option>
-                        <option value='2'>Location</option>
-                        <option value='3'>Cuisine</option>
-                        <option value='4'>Dish Name</option>
-                        <option value='5'> Restaurant name </option>
-                    </select> */}
                     <input style={{width:"450px" }} list="searchWord" class="form-control lg-5" type="search" placeholder="Search" aria-label="Search" autoComplete='on' onChange={this.searchChangeHandler}/>
                     <button onClick={this.handleSearch} style = {{ marginLeft: "5px", width: "60px", height:"38px", borderRadius:"5px", background: "red", color: "white", border: "1px solid red", cursor: "pointer"}} type="submit"><i class="fa fa-search"></i></button>
                 </form>

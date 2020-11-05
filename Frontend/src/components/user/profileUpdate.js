@@ -29,26 +29,26 @@ handleUpdate = (e) => {
   //prevent page from refresh
   e.preventDefault();
     const data = {
-            first_name: e.target.first_name.value,
-            last_name:  e.target.last_name.value,
+            firstName: e.target.first_name.value,
+            lastName:  e.target.last_name.value,
             contactNo:  e.target.contactNo.value,
             email:  e.target.email.value,
             gender: e.target.gender.value,
-            dateofbirth: e.target.dateofbirth.value,
-            nickname: e.target.nickname.value,
+            dateOfBirth: e.target.dateofbirth.value,
+            nickName: e.target.nickname.value,
             address: e.target.address.value,
-            thingsilove: e.target.thingsilove.value,
-            notyelping: e.target.notyelping.value,
+            thingsiLove: e.target.thingsilove.value,
+            notYelping: e.target.notyelping.value,
             headline: e.target.headline.value,
             website: e.target.website.value,
-            yelpingsince: e.target.yelpingsince.value
+            yelpingSince: e.target.yelpingsince.value
         }
-
+  //console.log(data);
   this.props.updateUser(data);
 };
     render() {
       var email = (this.props.user.email)
-      console.log(email)
+      console.log(this.props.status)
       let redirectVar = null;
       if(this.props.status ===  "USER_UPDATED"){
         localStorage.setItem("email_id", {email});
@@ -101,7 +101,7 @@ handleUpdate = (e) => {
                     <Form.Text style={{margin: "0px", padding: "0px"}} className='text-muted'>
                       This field is required.
                     </Form.Text>
-                    <Form.Control name="first_name" onChange={this.onChange} type='text' defaultValue={this.props.user.first_name} />
+                    <Form.Control name="first_name" onChange={this.onChange} type='text' defaultValue={this.props.user.firstName} />
                   </Form.Group>
                   <Form.Group controlId='lastName'>
                     <Form.Label style={{margin: "0px", padding: "0px"}}>
@@ -110,7 +110,7 @@ handleUpdate = (e) => {
                     <Form.Text style={{margin: "0px", padding: "0px"}} className='text-muted'>
                       This field is required.
                     </Form.Text>
-                    <Form.Control name="last_name" onChange={this.onChange} type='text' defaultValue={this.props.user.last_name}/>
+                    <Form.Control name="last_name" onChange={this.onChange} type='text' defaultValue={this.props.user.lastName}/>
                   </Form.Group>
                   <Form.Group controlId='email'>
                     <Form.Label style={{margin: "0px", padding: "0px"}}>
@@ -148,7 +148,7 @@ handleUpdate = (e) => {
                       name='dateofbirth'
                       placeholder='23 September 2001'
                       onChange={this.onChange}
-                      defaultValue={this.props.user.dateofbirth}
+                      defaultValue={this.props.user.dateOfBirth}
                     />
                   </Form.Group>
                   <Form.Group controlId='address'>
@@ -167,7 +167,7 @@ handleUpdate = (e) => {
                     <Form.Text style={{margin: "0px", padding: "0px"}} className='text-muted'>
                       The Boss, Calamity Jane, The Prolific Reviewer
                     </Form.Text>
-                    <Form.Control name="nickname" onChange={this.onChange} type='text' defaultValue={this.props.user.nickname} />
+                    <Form.Control name="nickname" onChange={this.onChange} type='text' defaultValue={this.props.user.nickName} />
                   </Form.Group>
                   <Form.Group controlId='yelpingsince'>
                     <Form.Label style={{margin: "0px", padding: "0px"}}>
@@ -176,7 +176,7 @@ handleUpdate = (e) => {
                     <Form.Text style={{margin: "0px", padding: "0px"}} className='text-muted'>
                       May 2017
                     </Form.Text>
-                    <Form.Control name="yelpingsince" onChange={this.onChange} type='text' defaultValue={this.props.user.yelpingsince}/>
+                    <Form.Control name="yelpingsince" onChange={this.onChange} type='text' defaultValue={this.props.user.yelpingSince}/>
                   </Form.Group>
                   <Form.Group controlId='yelpingSince'>
                     <Form.Label style={{margin: "0px", padding: "0px"}}>
@@ -185,7 +185,7 @@ handleUpdate = (e) => {
                     <Form.Text style={{margin: "0px", padding: "0px"}} className='text-muted'>
                     Comma separated phrases (e.g. sushi, Radiohead, puppies)
                     </Form.Text>
-                    <Form.Control name="thingsilove" onChange={this.onChange} type='text' defaultValue={this.props.user.thingsilove} />
+                    <Form.Control name="thingsilove" onChange={this.onChange} type='text' defaultValue={this.props.user.thingsiLove} />
                   </Form.Group>
                   <Form.Group controlId='notYelping'>
                     <Form.Label style={{margin: "0px", padding: "0px"}}>
@@ -194,7 +194,7 @@ handleUpdate = (e) => {
                     <Form.Text style={{margin: "0px", padding: "0px"}} className='text-muted'>
                     I’m missing out, I’m working at the art gallery, I’m probably at the movies
                     </Form.Text>
-                    <Form.Control name="notyelping" onChange={this.onChange} type='text' defaultValue={this.props.user.notyelping} />
+                    <Form.Control name="notyelping" onChange={this.onChange} type='text' defaultValue={this.props.user.notYelping} />
                   </Form.Group>
                   <Form.Group controlId='headline'>
                     <Form.Label style={{margin: "0px", padding: "0px"}}>

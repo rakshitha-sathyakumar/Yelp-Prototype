@@ -7,22 +7,25 @@ import PropTypes from 'prop-types';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Form, Button} from 'react-bootstrap';
+import { connect } from 'react-redux';
 import axios from 'axios';
 import backendServer from "../../../backendServer";
+import { getDish, updateDish} from '../../../actions/dishAction';
 
 class editDish extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-        menuList: []
-    };
+    this.state = {};
   }
 
   componentWillMount() {
-    axios.get(`${backendServer}/yelp/editDish/${this.props.match.params.rest_id}/${this.props.match.params.dish_id}`)
-    .then(res => {
-        this.setState({ menuList: res.data[0] });
-    })
+    //axios.get(`${backendServer}/yelp/editDish/${this.props.match.params.rest_id}/${this.props.match.params.dish_id}`)
+    const restId = this.props.match.params.rest_id;
+    const dishId = this.props.match.params.dish_id;
+    this.props.getDish(restId, dishId)
+    // .then(res => {
+    //     this.setState({ menuList: res.data[0] });
+    // })
   }
 
   onChange= (e) => {
@@ -42,28 +45,30 @@ onUpdate = (e) => {
   const data = {
     rest_id: this.props.match.params.rest_id,
     dish_id: this.props.match.params.dish_id,
-    dish_name: this.state.dish_name,
+    dishName: this.state.dish_name,
     ingredients: this.state.ingredients,
     price: this.state.price,
     description: this.state.description,
     category: this.state.category
   }
-  console.log(data.category);
+  // console.log(data.category);
+  this.props.updateDish(data);
   //localStorage.setItem("dish_category", data.category)
-  return axios.post(`${backendServer}/yelp/editDish`,data)
-  .then((response) => {
-      console.log(response.status)
-    if (response.status === 200) {
-      alert("Dish updated")
-      window.location = `/menu/${data.category}`
-    }
-  })
-  .catch(function(error) {
-     alert("Error")
-  })
+  // return axios.post(`${backendServer}/yelp/editDish`,data)
+  // .then((response) => {
+  //     console.log(response.status)
+  //   if (response.status === 200) {
+  //     alert("Dish updated")
+  //     window.location = `/menu/${data.category}`
+  //   }
+  // })
+  // .catch(function(error) {
+  //    alert("Error")
+  // })
 }
     render() {
-        console.log(this.state.menuList)
+      //const menuList = this.props.getUser;
+      console.log(this.props.user._id)
       return (
         <React.Fragment>
           <Navigationbar />
@@ -81,7 +86,7 @@ onUpdate = (e) => {
                   <Form.Text style={{margin: "0px", padding: "0px"}} className='text-muted'>
                     This field is required.
                   </Form.Text>
-                  <Form.Control onChange={this.onChange} name="dish_name" defaultValue={this.state.menuList.dish_name} type='text' />
+                  <Form.Control onChange={this.onChange} name="dish_name" defaultValue={this.props.user.dishName} type='text' />
                 </Form.Group>
                 <Form.Group controlId='lastName'>
                   <Form.Label style={{margin: "0px", padding: "0px"}}>
@@ -90,7 +95,7 @@ onUpdate = (e) => {
                   <Form.Text style={{margin: "0px", padding: "0px"}} className='text-muted'>
                     This field is required.
                   </Form.Text>
-                  <Form.Control onChange={this.onChange}  name="ingredients" defaultValue={this.state.menuList.ingredients} type='text' />
+                  <Form.Control onChange={this.onChange}  name="ingredients" defaultValue={this.props.user.ingredients} type='text' />
                 </Form.Group>
                 <Form.Group controlId='contact'>
                   <Form.Label style={{margin: "0px", padding: "0px"}}>
@@ -99,7 +104,7 @@ onUpdate = (e) => {
                   <Form.Text style={{margin: "0px", padding: "0px"}} className='text-muted'>
                     This field is required.
                   </Form.Text>
-                  <Form.Control onChange={this.onChange}  name="price" defaultValue={this.state.menuList.price} type='text' />
+                  <Form.Control onChange={this.onChange}  name="price" defaultValue={this.props.user.price} type='text' />
                 </Form.Group>
                 <Form.Group controlId='email'>
                   <Form.Label style={{margin: "0px", padding: "0px"}}>
@@ -108,7 +113,7 @@ onUpdate = (e) => {
                   <Form.Text style={{margin: "0px", padding: "0px"}} className='text-muted'>
                     This field is required.
                   </Form.Text>
-                  <Form.Control onChange={this.onChange} name="description" defaultValue={this.state.menuList.description} type='text' />
+                  <Form.Control onChange={this.onChange} name="description" defaultValue={this.props.user.description} type='text' />
                 </Form.Group>
                 <Form.Group controlId='category'>
                     <Form.Label style={{margin: "0px", padding: "0px"}}>
@@ -146,4 +151,20 @@ onUpdate = (e) => {
     }
   }
 
-  export default editDish;
+
+  editDish.propTypes = {
+    getDish: PropTypes.func.isRequired,
+    updateDish: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired,
+    status: PropTypes.object.isRequired
+  };
+
+  const mapStateToProps = state => {
+    return ({
+    user: state.addDish.user,
+    status: state.addDish.status
+
+  })};
+
+  export default connect(mapStateToProps, { getDish, updateDish })(editDish);
+  //export default editDish;

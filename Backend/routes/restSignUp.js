@@ -1,32 +1,30 @@
-const express = require("express");
+'use strict'
+const express = require('express');
 const router = express.Router();
-// const passwordHash = require('password-hash');
-const pool = require('../pool.js');
+const passport = require('passport');
+var kafka = require('../kafka/client');
+//const validate = require('../../validation/signupLogin');
+//const passportAuth = passport.authenticate('jwt', { session: false });
 
 router.post('/', (req, res) => {
-    let sql = `CALL add_restaurant('${req.body.name}', '${req.body.email}', '${req.body.password}', '${req.body.street}', '${req.body.zipcode}');`;
-    console.log(sql);
-    pool.query(sql, (err, result) => {
-        console.log(err);
-      if (err) {
-        // res.writeHead(500, {
-        //   'Content-Type': 'text/plain'
-        // });
-        res.end("Error in Data");
-      }
-      if (result && result.length > 0 && result[0][0].status === 'RESTAURANT_ADDED') {
-        // res.writeHead(200, {
-        //   'Content-Type': 'text/plain'
-        // })
-        res.end(result[0][0].status);
-      }
-      else if (result && result.length > 0 && result[0][0].status === 'RESTAURANT_EXISTS') {
-        // res.writeHead(401, {
-        //   'Content-Type': 'text/plain'
-        // })
-        res.end(result[0][0].status);
-      }
-    });
-  });
+kafka.make_request("restSignUp_topic", { "path": "restSignUp", "body": req.body }, function (err, results) {
+//console.log("In make request call back");
+console.log(results);
+if (err) {
+  console.log("Inside err");
+  console.log(err);
+  return res.status(err.status).send(err.message);
+} else {
+  //console.log("Inside else", results);
+  if (results.status === 200) {
+    return res.end(results.message);
+  } else {
+    return res.end(results.message);
+  }
+}
+})
+})
 
-  module.exports = router;
+
+
+module.exports = router;

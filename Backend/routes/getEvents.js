@@ -2,86 +2,87 @@ const express = require("express");
 const router = express.Router();
 const passwordHash = require('password-hash');
 const pool = require('../pool.js');
+var kafka = require('../kafka/client');
 
 
 router.get('/:rest_id', (req, res) => {
-      let sql = `CALL get_events('${req.params.rest_id}');`;
-      pool.query(sql, (err, result) => {
-          console.log(result);
-        if (err) {
-          res.writeHead(500, {
-            'Content-Type': 'text/plain'
-          });
-          res.end("Error in Data");
-        }
-        if (result && result.length > 0 && result[0][0]) {
-          res.writeHead(200, {
-            'Content-Type': 'text/plain'
-          });
-          //console.log(result[0]);
-          res.end(JSON.stringify(result[0]));
-        }
-      });
-});
+  console.log(req.params.rest_id)
+  kafka.make_request("events_topic", { "path": "getRestEvents", "body": req.params.rest_id }, function (err, results) {
+    console.log(results);
+    console.log("In make request call back", results);
+    if (err) {
+      console.log("Inside err");
+      console.log(err);
+      return res.status(err.status).send(err.message);
+    } else {
+      //console.log("Inside else", results);
+      if (results.status === 200) {
+        return res.status(results.status).send(results.data);
+      } else {
+        return res.status(results.status).send(results.errors);
+      }
+    }
+  })
+})
 
 router.get('/', (req,res) => {
-  let sql = `CALL get_allEvents();`;
-  pool.query(sql, (err, result) => {
-    console.log(result);
+  kafka.make_request("events_topic", { "path": "getAllEvents"}, function (err, results) {
+    console.log(results);
+    console.log("In make request call back", results);
     if (err) {
-      res.writeHead(500, {
-        'Content-Type': 'text/plain'
-      });
-      res.end("Error in Data");
+      console.log("Inside err");
+      console.log(err);
+      return res.status(err.status).send(err.message);
+    } else {
+      //console.log("Inside else", results);
+      if (results.status === 200) {
+        return res.status(results.status).send(results.data);
+      } else {
+        return res.status(results.status).send(results.errors);
+      }
     }
-    if (result && result.length > 0 && result[0][0]) {
-      res.writeHead(200, {
-        'Content-Type': 'text/plain'
-      });
-      //console.log(result[0]);
-      res.end(JSON.stringify(result[0]));
-    }
-  });
-});
+  })
+})
+
 
 router.get('/eventDetails/:event_id', (req,res) => {
-  let sql = `CALL get_userEvent('${req.params.event_id}');`;
-  pool.query(sql, (err, result) => {
-    console.log(result);
-  if (err) {
-    res.writeHead(500, {
-      'Content-Type': 'text/plain'
-    });
-    res.end("Error in Data");
-  }
-  if (result && result.length > 0 && result[0][0]) {
-    res.writeHead(200, {
-      'Content-Type': 'text/plain'
-    });
-    //console.log(result[0]);
-    res.end(JSON.stringify(result[0]));
+  console.log(req.params.event_id)
+  kafka.make_request("events_topic", { "path": "getEventDetails", "body": req.params.event_id}, function (err, results) {
+    console.log(results);
+    console.log("In make request call back", results);
+    if (err) {
+      console.log("Inside err");
+      console.log(err);
+      return res.status(err.status).send(err.message);
+    } else {
+      //console.log("Inside else", results);
+      if (results.status === 200) {
+        return res.status(results.status).send(results.data);
+      } else {
+        return res.status(results.status).send(results.errors);
+      }
     }
-  });
-});
+  })
+})
 
 router.get('/user/:user_id', (req, res) => {
-  let sql = `CALL get_regEvents('${req.params.user_id}');`;
-  pool.query(sql, (err, result) => {
-      console.log(result);
+  console.log(req.params.user_id)
+  kafka.make_request("events_topic", { "path": "userRegistration", "id": req.params.user_id}, function (err, results) {
+    console.log(results);
+    console.log("In make request call back", results);
     if (err) {
-      res.writeHead(500, {
-        'Content-Type': 'text/plain'
-      });
-      res.end("Error in Data");
+      console.log("Inside err");
+      console.log(err);
+      return res.status(err.status).send(err.message);
+    } else {
+      //console.log("Inside else", results);
+      if (results.status === 200) {
+        return res.status(results.status).send(results.data);
+      } else {
+        return res.status(results.status).send(results.errors);
+      }
     }
-    if (result && result.length > 0 && result[0][0]) {
-      res.writeHead(200, {
-        'Content-Type': 'text/plain'
-      });
-      //console.log(result[0]);
-      res.end(JSON.stringify(result[0]));
-    }
-  });
-});
+  })
+})
 
 module.exports = router;

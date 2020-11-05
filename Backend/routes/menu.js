@@ -2,129 +2,129 @@ const express = require("express");
 const router = express.Router();
 const passwordHash = require('password-hash');
 const pool = require('../pool.js');
+var kafka = require('../kafka/client');
 
 
 router.get('/appetizer/:rest_id', (req, res) => {
-      let sql = `CALL get_appetizer('${req.params.rest_id}');`;
-      pool.query(sql, (err, result) => {
-          // console.log(result);
-        if (err) {
-          res.writeHead(500, {
-            'Content-Type': 'text/plain'
-          });
-          res.end("Error in Data");
-        }
-        if (result && result.length > 0 && result[0][0]) {
-          res.writeHead(200, {
-            'Content-Type': 'text/plain'
-          });
-          //console.log(result[0]);
-          res.end(JSON.stringify(result[0]));
-        }
-      });
-});
+  console.log(req.params.rest_id);
+  kafka.make_request("restSignUp_topic", { "path": "getRestMenu", "id": req.params.rest_id, "body": 'Appetize' }, function (err, results) {
+    //console.log("In make request call back");
+    console.log(results);
+    if (err) {
+      console.log("Inside err");
+      console.log(err);
+      return res.status(err.status).send(err.message);
+    } else {
+      console.log("Inside else", results);
+      if (results.status === 200) {
+        return res.end(results.message);
+      } else {
+        return res.end(results.message);
+      }
+    }
+  })
+  })
 
 router.get('/maincourse/:rest_id', (req, res) => {
-    let sql = `CALL get_maincourse('${req.params.rest_id}');`;
-    pool.query(sql, (err, result) => {
-        console.log(result);
-      if (err) {
-        res.writeHead(500, {
-          'Content-Type': 'text/plain'
-        });
-        res.end("Error in Data");
+  console.log(req.params.rest_id);
+  kafka.make_request("restSignUp_topic", { "path": "getRestMenu", "id": req.params.rest_id, "category": 'Main course' }, function (err, results) {
+    console.log("In make request call back");
+    console.log(results.data);
+    if (err) {
+      console.log("Inside err");
+      console.log(err);
+      return res.status(err.status).send(err.message);
+    } else {
+      console.log("Inside else", results);
+      if (results.status === 200) {
+        return res.status(results.status).send(results.data);
+      } else {
+        return res.status(results.status).send(results.errors);
       }
-      if (result && result.length > 0 && result[0][0]) {
-        res.writeHead(200, {
-          'Content-Type': 'text/plain'
-        });
-        //console.log(result[0]);
-        res.end(JSON.stringify(result[0]));
-      }
-    });
-});
+    }
+  })
+  })
 
 router.get('/salad/:rest_id', (req, res) => {
-    let sql = `CALL get_salad('${req.params.rest_id}');`;
-    pool.query(sql, (err, result) => {
-        console.log(result);
-      if (err) {
-        res.writeHead(500, {
-          'Content-Type': 'text/plain'
-        });
-        res.end("Error in Data");
+  console.log(req.params.rest_id);
+  kafka.make_request("restSignUp_topic", { "path": "getRestMenu", "id": req.params.rest_id, "category": 'Salads' }, function (err, results) {
+    //console.log("In make request call back");
+    console.log(results.data);
+    if (err) {
+      console.log("Inside err");
+      console.log(err);
+      return res.status(err.status).send(err.message);
+    } else {
+      console.log("Inside else", results);
+      if (results.status === 200) {
+        return res.status(results.status).send(results.data);
+      } else {
+        return res.status(results.status).send(results.errors);
       }
-      if (result && result.length > 0 && result[0][0]) {
-        res.writeHead(200, {
-          'Content-Type': 'text/plain'
-        });
-        //console.log(result[0]);
-        res.end(JSON.stringify(result[0]));
-      }
-    });
-});
+    }
+  })
+  })
+
 
 router.get('/dessert/:rest_id', (req, res) => {
-    let sql = `CALL get_dessert('${req.params.rest_id}');`;
-    pool.query(sql, (err, result) => {
-        console.log(result);
+    console.log(req.params.rest_id);
+    kafka.make_request("restSignUp_topic", { "path": "getRestMenu", "id": req.params.rest_id, "category": 'Dessert' }, function (err, results) {
+      //console.log("In make request call back");
+      console.log(results.data);
       if (err) {
-        res.writeHead(500, {
-          'Content-Type': 'text/plain'
-        });
-        res.end("Error in Data");
+        console.log("Inside err");
+        console.log(err);
+        return res.status(err.status).send(err.message);
+      } else {
+        console.log("Inside else", results);
+        if (results.status === 200) {
+          return res.status(results.status).send(results.data);
+        } else {
+          return res.status(results.status).send(results.errors);
+        }
       }
-      if (result && result.length > 0 && result[0][0]) {
-        res.writeHead(200, {
-          'Content-Type': 'text/plain'
-        });
-        //console.log(result[0]);
-        res.end(JSON.stringify(result[0]));
-      }
-    });
-});
+    })
+    })
+
 
 router.get('/beverage/:rest_id', (req, res) => {
-    let sql = `CALL get_beverage('${req.params.rest_id}');`;
-    pool.query(sql, (err, result) => {
-        console.log(result);
+  console.log(req.params.rest_id);
+    kafka.make_request("restSignUp_topic", { "path": "getRestMenu", "id": req.params.rest_id, "category": 'Beverage' }, function (err, results) {
+      //console.log("In make request call back");
+      console.log(results.data);
       if (err) {
-        res.writeHead(500, {
-          'Content-Type': 'text/plain'
-        });
-        res.end("Error in Data");
+        console.log("Inside err");
+        console.log(err);
+        return res.status(err.status).send(err.message);
+      } else {
+        console.log("Inside else", results);
+        if (results.status === 200) {
+          return res.status(results.status).send(results.data);
+        } else {
+          return res.status(results.status).send(results.errors);
+        }
       }
-      if (result && result.length > 0 && result[0][0]) {
-        res.writeHead(200, {
-          'Content-Type': 'text/plain'
-        });
-        //console.log(result[0]);
-        res.end(JSON.stringify(result[0]));
-      }
-    });
-});
+    })
+    })
 
 router.get('/:rest_id', (req, res) => {
-  let sql = `CALL get_userDishes('${req.params.rest_id}');`;
-    pool.query(sql, (err, result) => {
-        console.log(result);
+  console.log(req.params.rest_id);
+    kafka.make_request("userSignUp_topic", { "path": "getMenu", "id": req.params.rest_id}, function (err, results) {
+      //console.log("In make request call back");
+      console.log(results.data[0].menu);
       if (err) {
-        res.writeHead(500, {
-          'Content-Type': 'text/plain'
-        });
-        res.end("Error in Data");
+        console.log("Inside err");
+        console.log(err);
+        return res.status(err.status).send(err.message);
+      } else {
+        console.log("Inside else", results);
+        if (results.status === 200) {
+          return res.status(results.status).send(results.data[0].menu);
+        } else {
+          return res.status(results.status).send(results.errors);
+        }
       }
-      if (result && result.length > 0 && result[0][0]) {
-        res.writeHead(200, {
-          'Content-Type': 'text/plain'
-        });
-        //console.log(result[0]);
-        res.end(JSON.stringify(result[0]));
-      }
-    });
-});
-
-
-
-
-    module.exports = router;
+    })
+    })
+    
+module.exports = router;

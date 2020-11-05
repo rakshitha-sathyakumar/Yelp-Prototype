@@ -4,7 +4,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import PropTypes from 'prop-types';
 import profilepic from './../images/download.png'
 import { connect } from 'react-redux';
-import { getUser, updateUser } from '../../actions/userProfileAction';
+import { getUser } from '../../actions/userProfileAction';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Jumbotron, CardImg} from 'react-bootstrap';
@@ -104,7 +104,7 @@ class userProfile extends Component {
                             </card>
                         </div>
                         <div class='col-xs-4 profileName' style={{position: "relative", marginLeft: "250px"}}>
-                            <h1>{this.props.user.first_name} {this.props.user.last_name}</h1>
+                            <h1>{this.props.user.firstName} {this.props.user.lastName}</h1>
                             <h6> "{this.props.user.headline}" </h6>
                             <p style={{fontSize:"13px"}}>{this.props.user.email}</p>
                             
@@ -165,23 +165,23 @@ class userProfile extends Component {
                     <p> {this.props.user.contactNo}</p>
                     <h5 style={{margin:"0px"}}> Gender </h5>
                     <p>{this.props.user.gender} </p>
-                    <h5 style={{margin:"0px"}}> Address</h5>
+                    <h5 style={{margin:"0px"}}> Location</h5>
                     <p> {this.props.user.address}</p>
                     <h5 style={{margin:"0px"}}> Birthday </h5>
-                    <p> {this.props.user.dateofbirth}</p>
+                    <p> {this.props.user.dateOfBirth}</p>
                 </div>
                 <div class='col-xs-12' style={{textAlign: "left", height: "100%", borderLeft: "1px solid #e6e6e6", marginLeft: "400px"}}>
                     <div style={{marginLeft: "10px"}}>
                         <h3 style={{color:'red'}}> About</h3>
                         <hr />
                         <h6 style={{margin:"0px"}}> Nickname </h6>
-                        <p> {this.props.user.nickname}</p>
+                        <p> {this.props.user.nickName}</p>
                         <h6 style={{margin:"0px"}}> Yelping since </h6>
-                        <p> {this.props.user.yelpingsince}</p>
+                        <p> {this.props.user.yelpingSince}</p>
                         <h6 style={{margin:"0px"}}> When I am not yelping... </h6>
-                        <p> {this.props.user.notyelping} </p>
+                        <p> {this.props.user.notYelping} </p>
                         <h6 style={{margin:"0px"}}> Things I love </h6>
-                        <p> {this.props.user.thingsilove}</p>
+                        <p> {this.props.user.thingsiLove}</p>
                         <h6 style={{margin:"0px"}}> My Blog or Website</h6>
                         <p>{this.props.user.website}</p>
                     </div>

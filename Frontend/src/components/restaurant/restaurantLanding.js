@@ -60,20 +60,24 @@ class RestaurantPage extends Component {
         this.props.updateRest(data);
     };
     render() {
+        console.log(this.props.user.review);
         var fileName = this.props.user.fileText
         var imgSrc = `${backendServer}/yelp/upload/restaurant/${fileName}`
-        let renderReview = this.state.reviewList.map(review => {
+        let renderReview;
+        if(this.props.user.review) {
+        renderReview = this.props.user.review.map(review => {
             return (
                 <div class='col-md-10'>
-                        <h3 style={{margin: "5px"}}>{review.first_name} {review.last_name} </h3>
+                        <h3 style={{margin: "5px"}}>{review.firstName} {review.lastName} </h3>
                         <h6 style={{margin: "5px"}}> {this.createElements(review.rating)}   {review.date}</h6>
-                        <p style={{margin: "5px"}}>"{review.reviews}"</p>
+                        <p style={{margin: "5px"}}>"{review.review}"</p>
 
                     <br/>
                     <hr />
                 </div>
             )
         })
+    }
       return (
 
         <React.Fragment>
@@ -95,7 +99,7 @@ class RestaurantPage extends Component {
                 </Carousel>
             </div>  
             <div class="row">
-            <div class="col-xs-4" style={{marginLeft: "50px", textAlign: "top"}}>
+            <div class="col-md-6" style={{marginLeft: "50px", textAlign: "top"}}>
                 <br />
                 <h1 style={{fontWeight: "bolder", margin:"0"}}> {this.props.user.name}</h1>
                 <p> {this.props.user.street}{','} {this.props.user.city}{','} {this.props.user.zipcode}</p>
@@ -114,16 +118,16 @@ class RestaurantPage extends Component {
                 <hr />
                 <h5 style={{textDecoration:"underline"}}> Available Delivery Methods </h5> {'  '}
                 <div>
-                    <p> <i class="fas fa-check" style={{color: "green"}}></i>  {this.props.user.delivery_method}</p>
+                    <p> <i class="fas fa-check" style={{color: "green"}}></i>  {this.props.user.deliveryMethod}</p>
                 </div>
                 <hr />
                 <h4> Review Hightlights</h4>
                 <hr />
                 {renderReview}
             </div>
-            <div class="col-xs-8" class="float-right" style={{marginLeft:"300px", marginTop: "20px"}}>
+            <div class="col-xs-8" class="float-right" style={{marginLeft:"400px", marginTop: "20px"}}>
                 <p>
-                <i class='fas fa-phone'></i> {this.props.user.contact_info}</p>
+                <i class='fas fa-phone'></i> {this.props.user.contactNo}</p>
                 <hr />
                 <p>
                 <i class='fas fa-envelope'></i> {this.props.user.email}</p>

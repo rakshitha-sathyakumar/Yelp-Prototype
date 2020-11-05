@@ -2,78 +2,109 @@ const express = require("express");
 const router = express.Router();
 const passwordHash = require('password-hash');
 const pool = require('../pool.js');
+var kafka = require('../kafka/client');
 
 router.get('/:user_id', (req, res) => {
   console.log(req.params.user_id);
-    let sql = `CALL get_user('${req.params.user_id}');`;
-    pool.query(sql, (err, result) => {
-      console.log(result)
-      if (err) {
-        res.writeHead(500, {
-          'Content-Type': 'text/plain'
-        });
-        res.end("Error in Data");
+  kafka.make_request("userSignUp_topic", { "path": "getUserDetails", "body": req.params.user_id}, function (err, results) {
+    console.log(results);
+    console.log("In make request call back", results);
+    if (err) {
+      console.log("Inside err");
+      console.log(err);
+      return res.status(err.status).send(err.message);
+    } else {
+      //console.log("Inside else", results);
+      if (results.status === 200) {
+        return res.status(results.status).send(results.data);
+      } else {
+        return res.status(results.status).send(results.errors);
       }
-      if (result && result.length > 0 && result[0][0]) {
-        res.writeHead(200, {
-          'Content-Type': 'text/plain'
-        });
-        console.log(result[0][0]);
-        res.end(JSON.stringify(result[0][0]));
-      }
-    });
-  });
+    }
+  })
+})
 
 
 router.post('/update/:user_id', (req, res) => {
-    let sql = `CALL update_user('${req.params.user_id}', '${req.body.email}', '${req.body.first_name}', '${req.body.last_name}', '${req.body.gender}', '${req.body.address}', '${req.body.contactNo}', '${req.body.dateofbirth}',  '${req.body.nickname}', '${req.body.thingsilove}', '${req.body.notyelping}', '${req.body.headline}', '${req.body.website}', '${req.body.yelpingsince}');`;
-    pool.query(sql, (err, result) => {
-      if (err) {
-        console.log(err);
-        res.writeHead(500, {
-          'Content-Type': 'text/plain'
-        });
-        res.end("Error in Data");
+  console.log(req.params.user_id)
+  kafka.make_request("userSignUp_topic", { "path": "userUpdate", "body": req.body, "userId": req.params.user_id }, function (err, results) {
+    console.log(results);
+    console.log("In make request call back", results);
+    if (err) {
+      console.log("Inside err");
+      console.log(err);
+      return res.status(err.status).send(err.message);
+    } else {
+      //console.log("Inside else", results);
+      if (results.status === 200) {
+        return res.end(results.message);
+      } else {
+        return res.end(results.message);
       }
-      if (result && result.length > 0 && result[0][0].status === 'USER_UPDATED') {
-        res.writeHead(200, {
-          'Content-Type': 'text/plain'
-        });
-        res.end(result[0][0].status);
-      }
-      else if (result && result.length > 0 && result[0][0].status === 'NO_RECORD') {
-        res.writeHead(401, {
-          'Content-Type': 'text/plain'
-        });
-        res.end(result[0][0].status);
-      }
-    });
+    }
+  })
   });
 
+
   router.post('/updateProfilePic', (req, res) => {
-    let sql = `CALL update_profilePic('${req.body.fileText}', '${req.body.user_id}');`;
-    pool.query(sql, (err, result) => {
-      if (err) {
-        console.log(err);
-        res.writeHead(500, {
-          'Content-Type': 'text/plain'
-        });
-        res.end("Error in Data");
+    console.log(req.user_id)
+    kafka.make_request("userSignUp_topic", { "path": "profilePicUpdate", "body": req.fileText, "userId": req.user_id }, function (err, results) {
+    console.log(results);
+    console.log("In make request call back", results);
+    if (err) {
+      console.log("Inside err");
+      console.log(err);
+      return res.status(err.status).send(err.message);
+    } else {
+      //console.log("Inside else", results);
+      if (results.status === 200) {
+        return res.end(results.message);
+      } else {
+        return res.end(results.message);
       }
-      if (result && result.length > 0 && result[0][0].status === 'PROFILEPIC_UPDATED') {
-        res.writeHead(200, {
-          'Content-Type': 'text/plain'
-        });
-        res.end(result[0][0].status);
-      }
-      else if (result && result.length > 0 && result[0][0].status === 'NO_RECORD') {
-        res.writeHead(401, {
-          'Content-Type': 'text/plain'
-        });
-        res.end(result[0][0].status);
-      }
-    });
-  });
+    }
+  })
+});
+
+// get all the users for the new tab
+router.get('/allUsers/:user_id', (req, res) => {
+  kafka.make_request("userSignUp_topic", { "path": "getAllUsers", "id": req.params.user_id }, function (err, results) {
+  console.log(results);
+  console.log("In make request call back", results);
+  if (err) {
+    console.log("Inside err");
+    console.log(err);
+    return res.status(err.status).send(err.message);
+  } else {
+    //console.log("Inside else", results);
+    if (results.status === 200) {
+      return res.status(results.status).send(results.data);
+    } else {
+      return res.status(results.status).send(results.errors);
+    }
+  }
+})
+});
+
+router.post('/updateFollowing/:user_id', (req, res) => {
+  console.log(req.user_id)
+  kafka.make_request("userSignUp_topic", { "path": "addUserFollowing", "body": req.body, "id": req.params.user_id }, function (err, results) {
+  console.log(results);
+  console.log("In make request call back", results);
+  if (err) {
+    console.log("Inside err");
+    console.log(err);
+    return res.status(err.status).send(err.message);
+  } else {
+    //console.log("Inside else", results);
+    if (results.status === 200) {
+      return res.end(results.message);
+    } else {
+      return res.end(results.message);
+    }
+  }
+})
+});
 
 
 module.exports=router;

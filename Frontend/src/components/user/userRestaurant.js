@@ -37,28 +37,32 @@ class userRestpage extends Component {
         .then(res => {
             console.log(res);
             this.setState({ restProfile: res.data });
-    })
-    axios.get(`${backendServer}/yelp/addReview/${localStorage.getItem("rest_id")}`)
-    .then(res =>{
+        axios.get(`${backendServer}/yelp/addReview/${localStorage.getItem("rest_id")}`)
+        .then(res =>{
         console.log(res);
-        this.setState({reviewList: res.data});
+    })
+        
     })
 }
     
     render() {
-        console.log(this.state.restProfile);
-        let renderReview = this.state.reviewList.map(review => {
+        //this.setState({reviewList: this.state.resProfile.review});
+        //console.log(this.state.reviewList);
+        let renderReview;
+        if (this.state.restProfile.review) {
+        renderReview = this.state.restProfile.review.map(review => {
             return (
                 <div class='col-md-10'>
-                        <h3 style={{margin: "5px"}}>{review.first_name} {review.last_name} </h3>
+                        <h3 style={{margin: "5px"}}>{review.firstName} {review.lastName} </h3>
                         <h6 style={{margin: "5px"}}> {this.createElements(review.rating)}   {review.date}</h6>
-                        <p style={{margin: "5px"}}>"{review.reviews}"</p>
+                        <p style={{margin: "5px"}}>"{review.review}"</p>
 
                     <br/>
                     <hr />
                 </div>
             )
         })
+    }
       return (
         <React.Fragment>
           <Navigationbar />
@@ -79,7 +83,7 @@ class userRestpage extends Component {
                 </Carousel>
             </div>  
             <div class="row">
-            <div class="col-xs-4" style={{marginLeft: "50px", textAlign: "top"}}>
+            <div class="col-md-6" style={{marginLeft: "50px", textAlign: "top"}}>
                 <br />
                 <h1 style={{fontWeight: "bolder", margin:"0"}}> {this.state.restProfile.name}</h1>
                 <p> {this.state.restProfile.address}</p>
@@ -95,12 +99,12 @@ class userRestpage extends Component {
                 <div class="inline-block">
                 <Button href = '/addReview' style = {{backgroundColor: "red", fontSize: "20px", border: '1px solid red', color: "white"}} variant="link"> <i class='fas fa-star'></i> Write a review</Button> {' '}
                 <Button href = '/userProfile' style = {{backgroundColor: "transparent", fontSize: "20px", border: '1px solid black', color: 'black'}} variant="link"><i class='fas fa-camera'></i> Add a photo</Button> {' '}
-                <Button href = '/events' style = {{backgroundColor: "transparent", fontSize: "20px", border: '1px solid black', color: 'black'}} variant="link"><i class="fas fa-calendar-week"></i>  Events</Button>
+                <Button href = '/allEvents' style = {{backgroundColor: "transparent", fontSize: "20px", border: '1px solid black', color: 'black'}} variant="link"><i class="fas fa-calendar-week"></i>  Events</Button>
                 </div>
                 <hr />
                 <h5 style={{textDecoration: "underline"}}> Available delivery method </h5> {'  '}
                 <div>
-                    <p style={{float: "left"}}> <i class="fas fa-check" style={{color: "green"}}></i> {this.state.restProfile.delivery_method}</p>
+                    <p style={{float: "left"}}> <i class="fas fa-check" style={{color: "green"}}></i> {this.state.restProfile.deliveryMethod}</p>
                 </div>
                 <br/>
                 <hr />
@@ -111,7 +115,7 @@ class userRestpage extends Component {
             </div>
             <div class="col-xs-8" class="float-right" style={{marginLeft:"300px", marginTop: "20px"}}>
                 <p>
-                <i class='fas fa-phone'></i> {this.state.restProfile.contact_info}</p>
+                <i class='fas fa-phone'></i> {this.state.restProfile.contactNo}</p>
                 <hr />
                 <p>
                 <i class='fas fa-envelope'></i> {this.state.restProfile.email}</p>

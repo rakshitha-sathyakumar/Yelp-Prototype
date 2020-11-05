@@ -1,33 +1,66 @@
-const express = require("express");
+'use strict'
+const express = require('express');
 const router = express.Router();
-// const passwordHash = require('password-hash');
-const pool = require('../pool.js');
+const passport = require('passport');
+var kafka = require('../kafka/client');
+
 
 router.post('/', (req, res) => {
-    let sql = `CALL add_events(' ${req.body.rest_id}', '${req.body.event_name}', '${req.body.description}', '${req.body.time}', '${req.body.date}', '${req.body.location}', '${req.body.hashtag}');`;
-    console.log(sql);
-    pool.query(sql, (err, result) => {
-        console.log(err);
-      if (err) {
-        res.end("Error in Data");
-      }
-      if (result && result.length > 0 && result[0][0].status === 'EVENT_ADDED') {
-        res.end(result[0][0].status);
-      }
-    });
-  });
+  kafka.make_request("events_topic", { "path": "createEvent", "body": req.body }, function (err, results) {
+  //console.log("In make request call back");
+  console.log(results);
+  if (err) {
+    console.log("Inside err");
+    console.log(err);
+    return res.status(err.status).send(err.message);
+  } else {
+    console.log("Inside else", results);
+    if (results.status === 200) {
+      return res.end(results.message);
+    } else {
+      return res.end(results.message);
+    }
+  }
+})
+})
 
   router.post('/update', (req, res) => {
-    let sql = `CALL add_regis(' ${req.body.event_id}', '${req.body.first_name}', '${req.body.last_name}', '${req.body.user_id}', '${req.body.event_name}');`;
-    console.log(sql);
-    pool.query(sql, (err, result) => {
-        console.log(err);
+    console.log(req.body.event_id);
+    kafka.make_request("events_topic", { "path": "addEventRegis", "id": req.body.event_id, "body": req.body }, function (err, results) {
+      //console.log("In make request call back");
+      console.log(results);
       if (err) {
-        res.end("Error in Data");
+        console.log("Inside err");
+        console.log(err);
+        return res.status(err.status).send(err.message);
+      } else {
+        console.log("Inside else", results);
+        if (results.status === 200) {
+          return res.end(results.message);
+        } else {
+          return res.end(results.message);
+        }
       }
-      if (result && result.length > 0 && result[0][0].status === 'REGISTERED') {
-        res.end(result[0][0].status);
+    })
+    })
+
+  router.post('/', (req, res) => {
+    kafka.make_request("events_topic", { "path": "createEvent", "body": req.body }, function (err, results) {
+    console.log("In make request call back");
+    console.log(results);
+    if (err) {
+      console.log("Inside err");
+      console.log(err);
+      return res.status(err.status).send(err.message);
+    } else {
+      console.log("Inside else", results);
+      if (results.status === 200) {
+        return res.end(results.message);
+      } else {
+        return res.end(results.message);
       }
-    });
-  });
-  module.exports = router;
+    }
+  })
+  })
+
+module.exports = router;
