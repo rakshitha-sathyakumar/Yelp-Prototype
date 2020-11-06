@@ -68,7 +68,7 @@ onUpdate = (e) => {
 }
     render() {
       //const menuList = this.props.getUser;
-      console.log(this.props.user._id)
+      console.log(this.props)
       return (
         <React.Fragment>
           <Navigationbar />

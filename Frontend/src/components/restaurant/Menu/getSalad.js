@@ -10,6 +10,9 @@ import axios from 'axios';
 import backendServer from "../../../backendServer";
 import ReactPaginate from 'react-paginate';
 import '../pagination.css';
+import {getsalad} from '../../../actions/menuAction';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 export class getSalad extends Component {
     constructor(props) {
@@ -25,12 +28,14 @@ export class getSalad extends Component {
     }
 
     componentDidMount() {
-        axios.get(`${backendServer}/yelp/viewMenu/salad/${localStorage.getItem("rest_id")}`)
-        .then(res => {
-            console.log(res.data)
-            this.setState({ saladList: res.data });
-            //console.log(this.state.appetizerList);
-        });
+        this.props.getsalad();
+        console.log(this.props.user);
+        // axios.get(`${backendServer}/yelp/viewMenu/salad/${localStorage.getItem("rest_id")}`)
+        // .then(res => {
+        //     console.log(res.data)
+        //     this.setState({ saladList: res.data });
+        //     //console.log(this.state.appetizerList);
+        // });
     }
 
     handlePageClick = e => {
@@ -51,7 +56,7 @@ export class getSalad extends Component {
     componentWillReceiveProps(nextProps){
         this.setState({
           ...this.state,
-          saladList : !nextProps.saladList ? this.state.saladList : nextProps.saladList,
+          saladList : !nextProps.user ? this.state.saladList : nextProps.user,
           pageCount: Math.ceil(this.state.saladList.length / this.state.perPage)  
         }
        );	
@@ -67,7 +72,7 @@ export class getSalad extends Component {
               previousLabel={"← Previous"}
               nextLabel={"Next →"}
               breakLabel={<span className="gap">...</span>}
-              pageCount={Math.ceil(this.state.saladList.length / this.state.perPage) > 1 ? Math.ceil(this.state.saladList.length / this.state.perPage) : 10}
+              pageCount={Math.ceil(this.state.saladList.length / this.state.perPage) > 0 ? Math.ceil(this.state.saladList.length / this.state.perPage) : 10}
               onPageChange={this.handlePageClick}
               forcePage={this.state.currentPage}
               containerClassName={"pagination"}
@@ -86,7 +91,7 @@ export class getSalad extends Component {
                 <div>
                     <Card style={{borderLeft: "none", borderBottom: "none"}}>
                         <Card.Img src = {imgSrc} style={{width: "500px", height: "420px"}}></Card.Img>
-                        <Card.Title style={{margin: "10px", fontSize: "25px"}}>{menu.dish_name} </Card.Title>
+                        <Card.Title style={{margin: "10px", fontSize: "25px"}}>{menu.dishName} </Card.Title>
                         <Card.Text style={{margin: "10px"}}>{menu.ingredients}</Card.Text>
                         <Card.Text style={{margin: "10px"}}>{menu.description}</Card.Text>
                         <Card.Text style={{margin: "10px"}}> ${menu.price}</Card.Text>
@@ -105,17 +110,32 @@ export class getSalad extends Component {
             <React.Fragment>
             <Navigationbar/>
             <div class='panel'>
-                {paginationElement}
                 <div class="container">
                     <center>
                         <h1 style={{margin: "10px"}}> Salads </h1>
                     </center>
                         {renderSalad}
                 </div>
+                <center>
+                {paginationElement}
+                </center>
             </div>
         </React.Fragment>
         )
     }
          
 }
-export default getSalad;
+
+getSalad.propTypes = {
+    getsalad: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired
+  };
+
+  const mapStateToProps = state => {
+    return ({
+    user: state.getMenu.user
+  })
+};
+
+export default connect(mapStateToProps, { getsalad })(getSalad);
+// export default getSalad;

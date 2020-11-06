@@ -10,6 +10,9 @@ import axios from 'axios';
 import backendServer from "../../../backendServer";
 import ReactPaginate from 'react-paginate';
 import '../pagination.css';
+import {getmaincourse} from '../../../actions/menuAction';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 export class getMaincourse extends Component {
     constructor(props) {
@@ -24,10 +27,12 @@ export class getMaincourse extends Component {
     }
 
     componentDidMount() {
-        axios.get(`${backendServer}/yelp/viewMenu/maincourse/${localStorage.getItem("rest_id")}`)
-        .then(res => {
-            this.setState({ maincourseList: res.data });
-        });
+        this.props.getmaincourse();
+        console.log(this.props.user);
+        // axios.get(`${backendServer}/yelp/viewMenu/maincourse/${localStorage.getItem("rest_id")}`)
+        // .then(res => {
+        //     this.setState({ maincourseList: res.data });
+        // });
     }
 
     handlePageClick = e => {
@@ -46,7 +51,7 @@ export class getMaincourse extends Component {
     componentWillReceiveProps(nextProps){
         this.setState({
           ...this.state,
-          maincourseList : !nextProps.maincourseList ? this.state.maincourseList : nextProps.maincourseList,
+          maincourseList : !nextProps.user ? this.state.maincourseList : nextProps.user,
           pageCount: Math.ceil(this.state.maincourseList.length / this.state.perPage)  
         }
        );	
@@ -117,4 +122,17 @@ export class getMaincourse extends Component {
     }
          
 }
-export default getMaincourse;
+
+getMaincourse.propTypes = {
+    getmaincourse: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired
+  };
+
+  const mapStateToProps = state => {
+    return ({
+    user: state.getMenu.user
+  })
+};
+
+export default connect(mapStateToProps, { getmaincourse })(getMaincourse);
+// export default getMaincourse;

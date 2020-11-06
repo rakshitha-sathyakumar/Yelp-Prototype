@@ -7,7 +7,7 @@ var kafka = require('../kafka/client');
 
 router.get('/appetizer/:rest_id', (req, res) => {
   console.log(req.params.rest_id);
-  kafka.make_request("restSignUp_topic", { "path": "getRestMenu", "id": req.params.rest_id, "body": 'Appetize' }, function (err, results) {
+  kafka.make_request("restSignUp_topic", { "path": "getRestMenu", "id": req.params.rest_id, "category": 'Appetizer' }, function (err, results) {
     //console.log("In make request call back");
     console.log(results);
     if (err) {
@@ -17,9 +17,9 @@ router.get('/appetizer/:rest_id', (req, res) => {
     } else {
       console.log("Inside else", results);
       if (results.status === 200) {
-        return res.end(results.message);
+        return res.status(results.status).send(results.data);
       } else {
-        return res.end(results.message);
+        return res.status(results.status).send(results.errors);
       }
     }
   })

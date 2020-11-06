@@ -10,6 +10,10 @@ import axios from 'axios';
 import backendServer from "../../../backendServer";
 import ReactPaginate from 'react-paginate';
 import '../pagination.css';
+import {getdessert} from '../../../actions/menuAction';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
 
 export class getDessert extends Component {
     constructor(props) {
@@ -24,12 +28,14 @@ export class getDessert extends Component {
     }
 
     componentDidMount() {
-        axios.get(`${backendServer}/yelp/viewMenu/dessert/${localStorage.getItem("rest_id")}`)
-        .then(res => {
-            //console.log(res.data)
-            this.setState({ dessertList: res.data });
-            //console.log(this.state.appetizerList);
-        });
+        this.props.getdessert();
+        console.log(this.props.user)
+        // axios.get(`${backendServer}/yelp/viewMenu/dessert/${localStorage.getItem("rest_id")}`)
+        // .then(res => {
+        //     //console.log(res.data)
+        //     this.setState({ dessertList: res.data });
+        //     //console.log(this.state.appetizerList);
+        // });
     }
 
     handlePageClick = e => {
@@ -47,7 +53,7 @@ export class getDessert extends Component {
     componentWillReceiveProps(nextProps){
         this.setState({
           ...this.state,
-          dessertList : !nextProps.dessertList ? this.state.dessertList : nextProps.dessertList,
+          dessertList : !nextProps.user ? this.state.dessertList : nextProps.user,
           pageCount: Math.ceil(this.state.dessertList.length / this.state.perPage)  
         }
        );	
@@ -65,7 +71,7 @@ export class getDessert extends Component {
               previousLabel={"← Previous"}
               nextLabel={"Next →"}
               breakLabel={<span className="gap">...</span>}
-              pageCount={Math.ceil(this.state.beverageList.length / this.state.perPage) > 0 ? Math.ceil(this.state.beverageList.length / this.state.perPage) : 10}
+              pageCount={Math.ceil(this.state.dessertList.length / this.state.perPage) > 0 ? Math.ceil(this.state.dessertList.length / this.state.perPage) : 10}
               onPageChange={this.handlePageClick}
               forcePage={this.state.currentPage}
               containerClassName={"pagination"}
@@ -84,7 +90,7 @@ export class getDessert extends Component {
                 <div>
                     <Card style={{borderLeft: "none", borderBottom: "none"}}>
                         <Card.Img src = {imgSrc} style={{width: "500px", height: "420px"}}></Card.Img>
-                        <Card.Title style={{margin: "10px", fontSize: "25px"}}>{menu.dish_name} </Card.Title>
+                        <Card.Title style={{margin: "10px", fontSize: "25px"}}>{menu.dishName} </Card.Title>
                         <Card.Text style={{margin: "10px"}}>{menu.ingredients}</Card.Text>
                         <Card.Text style={{margin: "10px"}}>{menu.description}</Card.Text>
                         <Card.Text style={{margin: "10px"}}> ${menu.price}</Card.Text>
@@ -116,4 +122,18 @@ export class getDessert extends Component {
     }
          
 }
-export default getDessert;
+
+
+getDessert.propTypes = {
+    getdessert: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired
+  };
+
+  const mapStateToProps = state => {
+    return ({
+    user: state.getMenu.user
+  })
+};
+
+export default connect(mapStateToProps, { getdessert })(getDessert);
+// export default getDessert;

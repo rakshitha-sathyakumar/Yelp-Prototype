@@ -1,11 +1,12 @@
 import { ADD_DISH, GET_DISH, UPDATE_DISH } from '../actions/types';
 
  const initialState = {
-     user: {},
+     user: [],
      status: ""
  };
 
  export default function(state = initialState, action){
+     console.log(action.payload);
     switch(action.type){
         case ADD_DISH:
             return {

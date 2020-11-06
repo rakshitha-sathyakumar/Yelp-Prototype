@@ -132,10 +132,10 @@ async function profilePicUpdate(msg, callback) {
     let response = {};
     console.log("In profile pic update topic service. Msg: ", msg);
     console.log(msg.body);
-    
+    console.log(msg.userId)
     await User.findByIdAndUpdate(
         { _id: msg.userId },
-        { fileName: msg.fileText },
+        { fileName: msg.body },
         { safe: true, new: true, useFindAndModify: false },
     ).then(user => {
         console.log(user);

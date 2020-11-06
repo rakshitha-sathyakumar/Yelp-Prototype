@@ -86,7 +86,7 @@ class userProfile extends Component {
 
     render() {
         console.log(this.props.user);
-        var fileName = this.props.user.fileText
+        var fileName = this.props.user.fileName
         var imgSrc = `${backendServer}/yelp/upload/restaurant/${fileName}`
         return (
         <div style={{margin:"5px"}}>

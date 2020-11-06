@@ -10,6 +10,9 @@ import axios from 'axios';
 import backendServer from '../../../backendServer';
 import ReactPaginate from 'react-paginate';
 import '../pagination.css';
+import {getbeverage} from '../../../actions/menuAction';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 // import { getMainCourse } from './getMaincourse';
 
 
@@ -26,10 +29,12 @@ export class getBeverage extends Component {
     }
 
     componentDidMount() {
-        axios.get(`${backendServer}/yelp/viewMenu/Beverage/${localStorage.getItem("rest_id")}`)
-        .then(res => {
-            this.setState({ beverageList: res.data });
-        });
+        this.props.getbeverage();
+        console.log(this.props.user)
+        // axios.get(`${backendServer}/yelp/viewMenu/Beverage/${localStorage.getItem("rest_id")}`)
+        // .then(res => {
+        //     this.setState({ beverageList: res.data });
+        // });
     }
 
     handlePageClick = e => {
@@ -45,15 +50,17 @@ export class getBeverage extends Component {
     };
 
     componentWillReceiveProps(nextProps){
+        console.log(nextProps)
         this.setState({
           ...this.state,
-          beverageList : !nextProps.beverageList ? this.state.beverageList : nextProps.beverageList,
+          beverageList : !nextProps.user ? this.state.beverageList : nextProps.user,
           pageCount: Math.ceil(this.state.beverageList.length / this.state.perPage)  
         }
        );	
       }
 
     render () {
+        console.log(this.props.user)
         console.log(this.state.beverageList);
 
         const count = this.state.beverageList.length;
@@ -84,13 +91,13 @@ export class getBeverage extends Component {
                 <div>
                     <Card style={{borderLeft: "none", borderBottom: "none"}}>
                         <Card.Img src = {imgSrc} style={{width: "500px", height: "420px"}}></Card.Img>
-                        <Card.Title style={{margin: "10px", fontSize: "25px"}}>{menu.dish_name} </Card.Title>
+                        <Card.Title style={{margin: "10px", fontSize: "25px"}}>{menu.dishName} </Card.Title>
                         <Card.Text style={{margin: "10px"}}>{menu.ingredients}</Card.Text>
                         <Card.Text style={{margin: "10px"}}>{menu.description}</Card.Text>
                         <Card.Text style={{margin: "10px"}}> ${menu.price}</Card.Text>
                         <div>
                         <Button style={{backgroundColor:"red", border: "1px solid red", marginLeft: "10px"}}> 
-                            <Link to = {{pathname: `/editDish/${localStorage.getItem("rest_id")}/${menu.dish_id}`}} style={{color: "white"}}> Edit dish </Link></Button>
+                            <Link to = {{pathname: `/editDish/${localStorage.getItem("rest_id")}/${menu._id}`}} style={{color: "white"}}> Edit dish </Link></Button>
                         </div>
                     </Card>
                     <br/>
@@ -117,4 +124,18 @@ export class getBeverage extends Component {
     }
          
 }
-export default getBeverage;
+
+getBeverage.propTypes = {
+    getbeverage: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired
+  };
+
+  const mapStateToProps = state => {
+    return ({
+    user: state.getMenu.user
+  })
+};
+
+export default connect(mapStateToProps, { getbeverage })(getBeverage);
+//export default getAppetizer;
+//export default getBeverage;

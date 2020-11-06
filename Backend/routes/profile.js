@@ -47,8 +47,11 @@ router.post('/update/:user_id', (req, res) => {
 
 
   router.post('/updateProfilePic', (req, res) => {
-    console.log(req.user_id)
-    kafka.make_request("userSignUp_topic", { "path": "profilePicUpdate", "body": req.fileText, "userId": req.user_id }, function (err, results) {
+
+    console.log("Hi i am in San Jose");
+    console.log(req.body.user_id);
+    console.log("Winter is coming");
+    kafka.make_request("userSignUp_topic", { "path": "profilePicUpdate", "body": req.body.fileText, "userId": req.body.user_id }, function (err, results) {
     console.log(results);
     console.log("In make request call back", results);
     if (err) {

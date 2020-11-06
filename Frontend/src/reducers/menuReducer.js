@@ -1,14 +1,14 @@
 import { APPETIZER, SALAD, GET_MAINCOURSE, GET_DESSERT, GET_BEVERAGES} from '../actions/types';
 
  const initialState = {
-     user: {}
+     user: []
  };
 
  export default function(state = initialState, action){
+
     switch(action.type)
     {
         case APPETIZER:
-            //console.log("hi, I am in appetizer case")
             return {
                 ...state,
                 user: action.payload
