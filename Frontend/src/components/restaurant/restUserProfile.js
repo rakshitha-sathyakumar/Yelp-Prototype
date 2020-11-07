@@ -7,19 +7,24 @@ import { connect } from 'react-redux';
 import { getUser, updateUser } from '../../actions/userProfileAction';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
-import { Jumbotron, CardImg, Button} from 'react-bootstrap';
+import { Jumbotron, CardImg, Button, Modal} from 'react-bootstrap';
 import YelpImage from './../images/yelp_logo.jpg'
 import axios from 'axios';
 import backendServer from "../../backendServer";
+//import Modal from "react-modal";
 
 class restUserProfile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            restUserProfile: []
+            restUserProfile: [],
+            showModal: false,
+            message: ''
         };
         this.onChange = this.onChange.bind(this);
         this.onUpdate = this.onUpdate.bind(this);
+        this.handleOpenModal = this.handleOpenModal.bind(this);
+        this.handleCloseModal = this.handleCloseModal.bind(this);
     }
 
     componentWillMount() {
@@ -56,6 +61,15 @@ class restUserProfile extends Component {
         })
     }
 
+    handleOpenModal() {
+        this.setState({ showModal: true });
+        // this.props.getEventRegistrationDetails(arg);
+      }
+
+      handleCloseModal() {
+        this.setState({ showModal: false });
+      }
+
     onUpdate = (e) => {
         //prevent page from refresh
         e.preventDefault();
@@ -64,8 +78,37 @@ class restUserProfile extends Component {
         this.props.updateUser(data);
     };
 
+    handleInputChange = (e) => {
+        console.log(e.target.value)
+        this.setState({
+            message: e.target.value
+        })
+    }
 
+    handleSendMessage = (e) => {
+        e.preventDefault();
+        console.log(this.state.message)
+        var today = new Date();
+        var current_date = ((today.getMonth()+1)+"/"+today.getDate()+"/"+today.getFullYear());
+        var current_time = (today.getHours() + ":"+today.getMinutes()+":"+today.getSeconds());
+        const data = {
+            orderId: this.props.location.state.orderId,
+            message: this.state.message,
+            date: current_date,
+            time: current_time,
+            owner: localStorage.getItem("rest_name")
+        }
+        axios.post(`${backendServer}/yelp/messages/initiate`, data)
+        .then(response => {
+            if(response.status === 200) {
+                alert("Message successfully sent")
+            }
+        })
+    }
+    
     render() {
+        console.log(this.props);
+        console.log(this.props.match.params.user_id);
         let renderFollow;
         if (localStorage.getItem("user") === 'True') {
             renderFollow = <div class='col-xs-4' style={{marginLeft: '1px'}}>
@@ -76,9 +119,17 @@ class restUserProfile extends Component {
             </ul>
         
        </div>
-        }
-        console.log("hi");
-        console.log(this.props);
+        } else {
+            renderFollow = <div class='col-xs-4' style={{marginLeft: '1px'}}>
+            <ul class='list-unstyled'>
+                <li>
+                <Button  style = {{margin:"25px 0px", marginLeft: "475px", backgroundColor: "red", border: 'none', fontSize: "17px", color: "white", outline: 'none'}} variant='link' onClick={this.handleOpenModal}> <i class="fas fa-comments"></i> Message </Button>
+                </li>
+            </ul>
+       </div>
+    }
+    console.log(this.props);
+
         return (
         <div style={{margin:"5px"}}>
             <Navigationbar />
@@ -95,15 +146,37 @@ class restUserProfile extends Component {
                             <p style={{fontSize:"13px"}}>{this.state.restUserProfile.email}</p>
                             
                         </div>
-                        {/* <div class='col-xs-4' style={{marginLeft: '1px'}}>
-                            <ul class='list-unstyled'>
-                                <li>
-                                <Button href='/allUsers' style = {{margin:"25px 0px", marginLeft: "475px", backgroundColor: "red", border: 'none', fontSize: "17px", color: "white", outline: 'none'}} variant='link' onClick={this.handleFollowing}> <i class="fas fa-user-plus"></i> Follow</Button>
-                                </li>
-                            </ul>
-                        
-                       </div> */}
                        {renderFollow}
+                       <Modal show={this.state.showModal} onHide={this.handleCloseModal}>
+                            <Modal.Header closeButton>
+                                    <Modal.Title style={{fontSize: "30px"}}>Send a message to {this.state.restUserProfile.firstName}</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <h4> Order Id: {this.props.location.state.orderId}</h4>
+                            <input class="form-control input-md" type='text' style={{ height: '70px'}} onChange={this.handleInputChange}/>
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button style={{border: "1px solid red", backgroundColor: "red", color: 'white',  width: "100px", borderRadius: '5px'}} onClick = {this.handleSendMessage}>Send</Button>
+                            </Modal.Footer>
+                        </Modal>
+                        {/* <Modal 
+                        isOpen = {this.state.showModal}
+                        className='dialog'>
+                            <br />
+                            <div class="container">
+                            <div style={{overflow: "hidden"}}>
+                            <h3 style={{float: 'left', fontWeight: "bold"}}> Send a message to {this.state.restUserProfile.firstName} </h3>
+                            <button className='mt-3' onClick={this.handleCloseModal} style={{border: "none", float: "right", backgroundColor: "transparent", color: 'black', fontWeight: "bold", fontSize: "20px"}}> x </button>
+                            </div>
+                            <hr />
+                            <br />
+                            <br />
+                            <input class="form-control input-md" type='text' style={{width: "500px", height: '70px'}} />
+                            <br />
+                            <button style={{border: "1px solid red", backgroundColor: "red", color: 'white',  width: "100px", borderRadius: '5px'}}> Send </button>    
+                            </div> 
+                        </Modal> */}
+
                     </div>
             </div>
             <div class='row' style={{ marginLeft:"10px"}}>

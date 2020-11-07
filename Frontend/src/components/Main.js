@@ -31,6 +31,9 @@ import eventDetails from './user/eventDetails';
 import userOrders from './user/userOrders';
 import restOrders from './restaurant/restOrders';
 import getAllUsers from './user/allUsers';
+import getMessages from './user/messages';
+
+
 class Main extends Component {
     render() {
         return (
@@ -66,6 +69,7 @@ class Main extends Component {
                 <Route exact path='/user/orders' component={userOrders}/>
                 <Route exact path='/restOrders' component={restOrders}/>
                 <Route exact path='/allUsers' component={getAllUsers}/>
+                <Route exact path='/messages' component={getMessages}/>
 
 
 

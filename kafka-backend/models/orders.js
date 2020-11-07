@@ -12,7 +12,14 @@ var orderSchema = new Schema({
     date: {type: String},
     time: {type: String},
     orderStatus: {type: String},
-    finalOrderStatus: {type: String}
+    finalOrderStatus: {type: String},
+    message :[{
+        date: {type: String},
+        time: {type: String},
+        message:{type: String},
+        firstName: {type: String},
+        owner: {type: String}
+    }]
 },
 {
     versionKey: false

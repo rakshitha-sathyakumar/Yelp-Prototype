@@ -6,6 +6,7 @@ var restSignUpTopic = require('./services/restSignUp_topic');
 var eventsTopic = require('./services/events_topic');
 var loginTopic = require('./services/login_topic');
 var orderTopic = require('./services/orders_topic');
+var messagesTopic = require('./services/messages_topic');
 const mongoose = require('mongoose');
 const {mongoDB} = require('./config');
 var options = {
@@ -70,11 +71,12 @@ function handleTopicRequest(topic_name, fname) {
                     return;
                 });
                 break;
-        //     case 'sellerProfile_topic':
-        //         fname.sellerProfileService(data.data, function (err, res) {
-        //             response(data, res, producer);
-        //             return;
-        //         });
+
+            case 'messages_topic':
+                fname.messageService(data.data, function (err, res) {
+                    response(data, res, producer);
+                    return;
+                });
         //         break;
         //     case 'seller_topic':
         //         fname.sellerService(data.data, function (err, res) {
@@ -137,3 +139,4 @@ handleTopicRequest("restSignUp_topic",restSignUpTopic);
 handleTopicRequest("events_topic",eventsTopic);
 handleTopicRequest("login_topic", loginTopic);
 handleTopicRequest("orders_topic", orderTopic);
+handleTopicRequest("messages_topic", messagesTopic);

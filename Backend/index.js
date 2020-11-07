@@ -68,6 +68,7 @@ const addOrder = require("./routes/order");
 const searchBar = require("./routes/search");
 const uploadImage = require("./routes/upload");
 const allUsers = require("./routes/allUsers");
+const messages = require("./routes/message");
 
 app.use("/yelp/login", login);
 app.use("/yelp/customerSignUp", custSignup);
@@ -85,6 +86,7 @@ app.use("/yelp/order", addOrder);
 app.use("/restaurantSearch", searchBar);
 app.use("/yelp/upload", uploadImage);
 app.use("/yelp/allUsers",allUsers);
+app.use("/yelp/messages", messages);
 
 const port = process.env.PORT || 3001;
 var server = app.listen(port, () => {

@@ -146,7 +146,7 @@ class userProfile extends Component {
                         </li>
                         <hr/>
                         <li style={{margin: "10px"}}>
-                            <a href="#">
+                            <a href="/messages">
                                 Messages
                             </a>
                         </li>

@@ -5,7 +5,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 // import backgroundImage from '../images/menuCard.jpg';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
-import { Form, Button, Card, CardGroup} from 'react-bootstrap';
+import { Form, Button, Card, CardGroup, Modal} from 'react-bootstrap';
 import axios from 'axios';
 import backendServer from '../../backendServer';
 import ReactPaginate from 'react-paginate';
@@ -18,6 +18,10 @@ export class restOrders extends Component {
         this.state = {
             restOrders: [],
             tempRestOrder: [],
+            showModal: false,
+            orderId: '',
+            chatData: [],
+            message: '',
             offset: 0,
             perPage: 1,
             currentPage: 0,
@@ -80,6 +84,16 @@ export class restOrders extends Component {
        );	
       }
 
+      handleOpenModal = (e) => {
+        const filteredData = this.state.restOrders.filter(each => each._id === e.target.value)
+        this.setState({ showModal: true, chatData: filteredData[0].message, orderId: e.target.value});
+        
+      }
+
+      handleCloseModal = () => {
+        this.setState({ showModal: false });
+      }
+
 
     onUpdate = (e) => {
         e.preventDefault();
@@ -108,6 +122,37 @@ export class restOrders extends Component {
           console.log(allOrders)
           this.setState({tempRestOrder: allOrders})
       }
+    
+      handleInputChange = (e) => {
+        console.log(e.target.value)
+        this.setState({
+            message: e.target.value
+        })
+    }
+
+      handleSendMessage = (e) => {
+        e.preventDefault();
+        console.log(this.state.message)
+        var today = new Date();
+        var current_date = ((today.getMonth()+1)+"/"+today.getDate()+"/"+today.getFullYear());
+        var current_time = (today.getHours() + ":"+today.getMinutes()+":"+today.getSeconds());
+        const data = {
+            orderId: this.state.orderId,
+            message: this.state.message,
+            date: current_date,
+            time: current_time,
+            owner: localStorage.getItem("rest_name")
+        }
+        console.log(data);
+        axios.post(`${backendServer}/yelp/messages/initiate`, data)
+        .then(response => {
+            if(response.status === 200) {
+                alert("Reply successfully sent")
+            }
+        })
+    }
+
+      
 
     render () {
         console.log(this.state.tempRestOrder);
@@ -131,11 +176,41 @@ export class restOrders extends Component {
             />
           );
 
+          let renderChat;
+        if(this.state.chatData.length >= 1) {
+            renderChat = this.state.chatData.map(chat => {
+                if(chat.firstName) {
+                return (
+                    <div>
+                        <p style={{marginBottom:"0px", float:"right"}}> {chat.message} </p>
+                        <br />
+                        <p class="text-muted" style={{marginBottom:"0px", float:"right"}}> {chat.owner} </p>
+                        <br />
+                        <p class="text-muted" style={{float:"right"}}> {chat.date} {chat.time} </p>
+                        <br />
+                        <br />
+                        <br />
+                    </div>
+                )
+                } else {
+                    return (
+                        <div>
+                            <p style={{marginBottom:"0px"}}> {chat.message} </p>
+                            <p class="text-muted" style ={{marginBottom:"0px"}}> {chat.owner} </p>
+                            <p class="text-muted"> {chat.date} {chat.time} </p>
+                            <br />
+                        </div>
+                    )
+                }
+            })
+        }
+
           let renderOrders;
           if(this.state.tempRestOrder) {
             renderOrders = slice.map((order,key) => {
             let button1;
             let button2;
+            let chatButton;
             if(order.orderType === 'pickup'){
                 button1 = <Form.Check id = {order._id} name={order.dishName} label='Pickup ready' 
                             value='Pickup ready' onChange={this.handleCheckboxChange} style={{marginLeft:"10px", color: 'red' }}/>
@@ -147,12 +222,15 @@ export class restOrders extends Component {
                 button2 = <Form.Check id = {order._id} name={order.dishName} label='Delivered' 
                     value='Delivered' onChange={this.handleCheckboxChange} style={{marginLeft:"10px", color: 'red' }}/>
             }
+            if(order.message.length >= 1) {
+                chatButton = <Button value={order._id} style={{ marginLeft:"10px", marginTop: "10px", backgroundColor: "red", border: "1px solid red"}} onClick={this.handleOpenModal}> Chat </Button>
+            }
             return (
                 <div>
                     <Card style={{border: "none"}}>
                         <Card.Title style={{marginLeft:"10px", fontSize: "25px"}}>{order.dishName} </Card.Title>
                         <Card.Text><span style={{fontWeight: "bold", marginLeft:"10px"}}> Customer: </span>
-                            <Link to = {{pathname: `/userProfile/${order.userId}`}}> {order.firstName} {order.lastName} </Link> </Card.Text>
+                            <Link to = {{pathname: `/userProfile/${order.userId}`, state:{orderId: order._id}}}> {order.firstName} {order.lastName} </Link> </Card.Text>
                         {/* <Card.Text> <span style={{fontWeight: "bold", marginLeft:"10px"}}>Restuarant:</span> {order.rest_name}</Card.Text> */}
                         <Card.Text> <span style={{fontWeight: "bold", marginLeft:"10px"}}>Order type:</span> {order.orderType}</Card.Text>
                         <Card.Text> <span style={{fontWeight: "bold", marginLeft:"10px"}}>Order Status:</span> {order.orderStatus}</Card.Text>
@@ -177,9 +255,23 @@ export class restOrders extends Component {
                             />
                             {button1}
                             {button2}
+                            
                             <div>
-                            <Button style={{ marginLeft:"10px", marginTop: "10px", backgroundColor: "red", border: "1px solid red"}} type="submit"> 
-                                 Update order status </Button>
+                                <Button style={{ marginLeft:"10px", marginTop: "10px", backgroundColor: "red", border: "1px solid red"}} type="submit"> 
+                                    Update order status </Button>
+                                    {chatButton}
+                                    <Modal show={this.state.showModal} onHide={this.handleCloseModal}>
+                                        <Modal.Header closeButton>
+                                            <Modal.Title style={{fontSize: "30px"}}> Your conversation </Modal.Title>
+                                        </Modal.Header>
+                                        <Modal.Body>
+                                            {renderChat}
+                                            <input class="form-control input-md" type='text' style={{ height: '70px'}} onChange={this.handleInputChange}/>
+                                        </Modal.Body>
+                                        <Modal.Footer>
+                                            <Button style={{border: "1px solid red", backgroundColor: "red", color: 'white',  width: "100px", borderRadius: '5px'}} onClick = {this.handleSendMessage}>Reply</Button>
+                                        </Modal.Footer>
+                                    </Modal>
                             </div>
                         </Form>
                     </Card>

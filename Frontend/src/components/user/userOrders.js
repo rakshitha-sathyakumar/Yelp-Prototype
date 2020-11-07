@@ -16,7 +16,7 @@ export class userOrders extends Component {
             userOrders: [],
             tempUserOrders: [],
             offset: 0,
-            perPage: 1,
+            perPage: 2,
             currentPage: 0,
             pageCount: null
         };
@@ -65,7 +65,7 @@ export class userOrders extends Component {
       }
 
       handlePageClick = e => {
-        alert("inside handle");
+        // alert("inside handle");
         const selectedPage = e.selected;
         const offset = selectedPage * this.state.perPage;
 
@@ -183,7 +183,7 @@ export class userOrders extends Component {
                         <Button style={{marginLeft:"10px", marginTop: "10px", backgroundColor: "red", border: "1px solid red" }} type="submit" onClick={this.handleReset}> Remove filters </Button>
                         </Form>
                     </div>
-                    <div style={{paddingTop:'500px', paddingLeft: "400px"}}>
+                    <div style={{paddingTop:'750px', paddingLeft: "400px"}}>
                         {paginationElement}
                     </div>
                        

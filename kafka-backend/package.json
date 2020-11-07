@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "react-modal": "^3.11.2",
     "react-paginate": "^6.5.0"
   }
 }
