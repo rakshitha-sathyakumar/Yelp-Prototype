@@ -126,7 +126,20 @@ class restUserProfile extends Component {
                 <Button  style = {{margin:"25px 0px", marginLeft: "475px", backgroundColor: "red", border: 'none', fontSize: "17px", color: "white", outline: 'none'}} variant='link' onClick={this.handleOpenModal}> <i class="fas fa-comments"></i> Message </Button>
                 </li>
             </ul>
+            <Modal show={this.state.showModal} onHide={this.handleCloseModal}>
+                            <Modal.Header closeButton>
+                                    <Modal.Title style={{fontSize: "30px"}}>Send a message to {this.state.restUserProfile.firstName}</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <h4> Order Id: {this.props.location.state.orderId}</h4>
+                            <input class="form-control input-md" type='text' style={{ height: '70px'}} onChange={this.handleInputChange}/>
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button style={{border: "1px solid red", backgroundColor: "red", color: 'white',  width: "100px", borderRadius: '5px'}} onClick = {this.handleSendMessage}>Send</Button>
+                            </Modal.Footer>
+                        </Modal>
        </div>
+
     }
     console.log(this.props);
 
@@ -147,7 +160,7 @@ class restUserProfile extends Component {
                             
                         </div>
                        {renderFollow}
-                       <Modal show={this.state.showModal} onHide={this.handleCloseModal}>
+                       {/* <Modal show={this.state.showModal} onHide={this.handleCloseModal}>
                             <Modal.Header closeButton>
                                     <Modal.Title style={{fontSize: "30px"}}>Send a message to {this.state.restUserProfile.firstName}</Modal.Title>
                             </Modal.Header>
@@ -158,7 +171,7 @@ class restUserProfile extends Component {
                             <Modal.Footer>
                                 <Button style={{border: "1px solid red", backgroundColor: "red", color: 'white',  width: "100px", borderRadius: '5px'}} onClick = {this.handleSendMessage}>Send</Button>
                             </Modal.Footer>
-                        </Modal>
+                        </Modal> */}
                         {/* <Modal 
                         isOpen = {this.state.showModal}
                         className='dialog'>

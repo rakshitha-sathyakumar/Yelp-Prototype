@@ -81,7 +81,9 @@ export class userOrders extends Component {
                 return (
                     <div>
                         <p style={{marginBottom:"0px", float:"right"}}> {chat.message} </p>
+                        <br />
                         <p class="text-muted" style={{marginBottom:"0px", float:"right"}}> {chat.owner} </p>
+                        <br />
                         <p class="text-muted" style={{float:"right"}}> {chat.date} {chat.time} </p>
                         <br />
                         <br />

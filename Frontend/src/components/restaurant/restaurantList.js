@@ -156,7 +156,7 @@ componentWillReceiveProps(nextProps){
       let renderRest;
       if (this.state.tempRestList) {
       renderRest = slice.map((rest, key) => {
-          var fileName = rest.fileNanme
+          var fileName = rest.fileName
           var imgSrc = `${backendServer}/yelp/upload/restaurant/${fileName}`
             return (
                 <div class='col-md-6'>

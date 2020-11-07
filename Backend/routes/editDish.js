@@ -26,8 +26,8 @@ router.get('/:rest_id/:dish_id', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-  console.log(req.params.rest_id);
-  console.log(req.params.user_id)
+  console.log(req.body.rest_id);
+  console.log(req.body.user_id)
   kafka.make_request("restSignUp_topic", { "path": "updateDishDetails", "body": req.body, "restId": req.body.rest_id, "dishId": req.body.dish_id }, function (err, results) {
     console.log(results);
     console.log("In make request call back", results);

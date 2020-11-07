@@ -89,7 +89,7 @@ export class getAppetizer extends Component {
         let renderAppetizer;
         if (this.state.appetizerList){
             renderAppetizer = slice.map(menu => {
-                var fileName = menu.fileText
+                var fileName = menu.dishFileName
                 var imgSrc = `${backendServer}/yelp/upload/restaurant/${fileName}`
                 return (
                         <div>

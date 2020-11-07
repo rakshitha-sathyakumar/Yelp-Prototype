@@ -75,7 +75,7 @@ handleUpdate = (e) => {
     timings: e.target.timings.value,
     cuisine: e.target.cuisine.value,
     deliveryMethod: e.target.delivery.value,
-    fileText: this.state.fileText
+    fileName: this.state.fileText
   }
   this.props.updateRest(data);
   // if(action.payload === "RESTAURANT_UPDATED") {
@@ -144,7 +144,7 @@ handleUpdate = (e) => {
                   <Form.Text style={{margin: "0px", padding: "0px"}} className='text-muted'>
                     This field is required.
                   </Form.Text>
-                  <Form.Control name="contact_info" onChange={this.onChange} defaultValue={this.props.user.contactNnfo} type='text' />
+                  <Form.Control name="contact_info" onChange={this.onChange} defaultValue={this.props.user.contactNo} type='text' />
                 </Form.Group>
                 <Form.Group controlId='email'>
                   <Form.Label style={{margin: "0px", padding: "0px"}}>

@@ -127,11 +127,14 @@ export class getAllUsers extends Component {
         let renderAllUsers;
         if(this.state.userList){
         renderAllUsers = this.state.userList.map(user => {
+            var fileName = user.fileName
+            var imgSrc = `${backendServer}/yelp/upload/restaurant/${fileName}`
             return (
                 <div>
                     <Card style={{borderBottom: "none", borderLeft: "none"}}>
-                        <Card.Title style={{margin: "10px", fontSize: "25px"}}>{user.firstName} {user.lastName} </Card.Title>
-                        <Card.Text style={{margin: "10px"}}> <i class="fas fa-location-arrow"></i> {user.address}</Card.Text>
+                    <Card.Img style={{height: "300px", width: "225px"}}variant="top" src={imgSrc} />
+                        <Card.Title style={{ fontSize: "25px"}}>{user.firstName} {user.lastName} </Card.Title>
+                        <Card.Text> <i class="fas fa-location-arrow"></i> {user.address}</Card.Text>
                         {/* <Card.Text style={{margin: "10px"}}> <i class="fas fa-hourglass"></i> {event.time}</Card.Text> */}
                         <div>
                         <Button style={{backgroundColor: "red", border: "1px solid red", margin: "10px"}}>
