@@ -7,6 +7,9 @@ import axios from 'axios';
 import backendServer from '../../backendServer';
 import ReactPaginate from 'react-paginate';
 import '../restaurant/pagination.css';
+import {getUserOrder, sendMessage} from '../../actions/orderAction';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 // import { getMainCourse } from './getMaincourse';
 
 export class userOrders extends Component {
@@ -24,11 +27,17 @@ export class userOrders extends Component {
 
 
     componentDidMount() {
-        axios.get(`${backendServer}/yelp/order/${localStorage.getItem("user_id")}`)
-        .then(res => {
-            this.setState({ userOrders: res.data, tempUserOrders: res.data });
-        });
+        this.props.getUserOrder();
     }
+
+    componentWillReceiveProps(nextProps){
+        this.setState({
+          ...this.state,
+          userOrders : !nextProps.user ? this.state.userOrders : nextProps.user,
+          tempUserOrders: !nextProps.user ? this.state.tempUserOrders : nextProps.user,  
+        }
+       );	
+      }
 
     handleOpenModal = (e) => {
         const filteredData = this.state.userOrders.filter(each => each._id === e.target.value)
@@ -62,40 +71,35 @@ export class userOrders extends Component {
             owner: localStorage.getItem("first_name")
         }
         console.log(data);
-        axios.post(`${backendServer}/yelp/messages/initiate`, data)
-        .then(response => {
-            if(response.status === 200) {
-                alert("Reply successfully sent")
-            }
-        })
+        this.props.sendMessage(data)
     }
     
 
     render () {
-        // const filteredData = this.state.userOrders.filter(each => each._id === this.state.orderId)
-        // console.log(filteredData[0]);
         let renderChat;
         if(this.state.chatData.length >= 1) {
             renderChat = this.state.chatData.map(chat => {
                 if(chat.firstName) {
                 return (
                     <div>
-                        <p style={{marginBottom:"0px", float:"right"}}> {chat.message} </p>
-                        <br />
-                        <p class="text-muted" style={{marginBottom:"0px", float:"right"}}> {chat.owner} </p>
-                        <br />
-                        <p class="text-muted" style={{float:"right"}}> {chat.date} {chat.time} </p>
-                        <br />
-                        <br />
-                        <br />
+                        <div>
+                            <p style={{marginBottom:"0px", float:"right"}}> {chat.message} </p>
+                            <br />
+                            <p class="text-muted" style={{marginBottom:"0px", float:"right", fontSize: "12px"}}> {chat.owner} </p>
+                            <br />
+                            <p class="text-muted" style={{marginTop: "0px", float:"right", fontSize: "12px"}}> {chat.date} {chat.time} </p>
+                            <br />
+                            </div>
+                            <br />
+                            <br />
                     </div>
                 )
                 } else {
                     return (
                         <div>
                             <p style={{marginBottom:"0px"}}> {chat.message} </p>
-                            <p class="text-muted" style={{marginBottom:"0px"}}> {chat.owner} </p>
-                            <p class="text-muted"> {chat.date} {chat.time} </p>
+                            <p class="text-muted" style={{marginBottom:"0px", fontSize: "12px"}}> {chat.owner} </p>
+                            <p class="text-muted" style={{fontSize: "12px"}}> {chat.date} {chat.time} </p>
                             <br />
                         </div>
                     )
@@ -108,25 +112,34 @@ export class userOrders extends Component {
             renderOrders = this.state.tempUserOrders.map(order => {
                 console.log(order.message)
                 if(order.message.length >= 1) {
+                    let length = order.message.length
                 return (
                     <div>
-                        <p> <b>Order Id</b>: {order._id} </p>
-                        <p> <b>Restaurant Name </b>: {order.restName} </p>
-                        <p> <b>Dish name </b>: {order.dishName} </p>
+                        <div class='col-md-8' style={{border: '1px solid lightGrey', padding: "10px"}}>
+                        <div>
+                        <h5 style={{float: "left"}}> <b>Order Id</b>: {order._id} </h5>
+                        <h5 style={{float: "right"}}> <b>Restaurant Name </b>: {order.restName} </h5>
+                        </div>
+                        <br />
+                        <br />
+                        <h6> <b>Dish name </b>: {order.dishName} </h6>
+                        <h6> <b> Recent message </b>: {order.message[length - 1].message} </h6>
+                        </div>
+                        <br />
                         <Button value={order._id} style={{backgroundColor: "red", color: "white", border: "1px solid red"}} onClick={this.handleOpenModal}> Chat </Button>
+                        <hr />
                         <Modal show={this.state.showModal} onHide={this.handleCloseModal}>
                         <Modal.Header closeButton>
                             <Modal.Title style={{fontSize: "30px"}}> Your conversation </Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
                                 {renderChat}
-                            <input class="form-control input-md" type='text' style={{ height: '70px'}} onChange={this.handleInputChange}/>
+                            <input class="form-control input-md" type='text' style={{ height: '70px'}} onChange={this.handleInputChange} placeholder="Reply here"/>
                             </Modal.Body>
                             <Modal.Footer>
                                 <Button style={{border: "1px solid red", backgroundColor: "red", color: 'white',  width: "100px", borderRadius: '5px'}} onClick = {this.handleSendMessage}>Reply</Button>
                             </Modal.Footer>
                         </Modal>
-                        <hr />
                         <br/>
                         <br/>
                     </div>
@@ -140,10 +153,8 @@ export class userOrders extends Component {
                 <Navigationbar/>
                 <div class="container">
                 <div >
-                    <center>
                     <h1 style={{margin: "10px", color:"red"}}> All messages </h1>
-                    </center>
-                    <hr />
+                    <br />
                     {renderOrders} 
                 </div>         
                 </div>
@@ -153,4 +164,22 @@ export class userOrders extends Component {
     }
          
 }
-export default userOrders;
+// export default userOrders;
+userOrders.propTypes = {
+    getUserOrder: PropTypes.func.isRequired,
+    sendMessage: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired,
+    status: PropTypes.object.isRequired
+}
+
+const mapStateToProps = state => { 
+    return ({
+    user: state.orders.user,
+    status: state.orders.status
+})};
+
+export default connect(mapStateToProps, { getUserOrder, sendMessage })(userOrders);
+
+
+
+

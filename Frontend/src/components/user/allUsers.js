@@ -11,6 +11,9 @@ import axios from 'axios';
 import backendServer from "../../backendServer";
 import ReactPaginate from 'react-paginate';
 import '../restaurant/pagination.css';
+import {getAlluser} from '../../actions/userProfileAction';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 export class getAllUsers extends Component {
     constructor(props) {
@@ -26,11 +29,12 @@ export class getAllUsers extends Component {
     }
 
     componentDidMount() {
-        axios.get(`${backendServer}/yelp/userProfile/allUsers/${localStorage.getItem("user_id")}`)
-        .then(res => {
-            console.log(res.data)
-            this.setState({ userList: res.data });
-        });
+        this.props.getAlluser();
+        // axios.get(`${backendServer}/yelp/userProfile/allUsers/${localStorage.getItem("user_id")}`)
+        // .then(res => {
+        //     console.log(res.data)
+        //     this.setState({ userList: res.data });
+        // });
     }
 
     handlePageClick = e => {
@@ -49,7 +53,7 @@ export class getAllUsers extends Component {
     componentWillReceiveProps(nextProps){
         this.setState({
           ...this.state,
-          userList : !nextProps.userList ? this.state.userList : nextProps.userList,
+          userList : !nextProps.user ? this.state.userList : nextProps.user,
           pageCount: Math.ceil(this.state.userList.length / this.state.perPage)  
         }
        );	
@@ -87,7 +91,6 @@ export class getAllUsers extends Component {
             console.log(response.data);
             this.setState({userList: response.data})
         })
-        // this.setState({searchList: "True"})
     }
 
     handleFollowUsers = (e) => {
@@ -101,7 +104,7 @@ export class getAllUsers extends Component {
 
     render () {
 
-        console.log(this.state.userList);
+        console.log(this.props);
 
         const count = this.state.userList.length;
         const slice = this.state.userList.slice(this.state.offset, this.state.offset + this.state.perPage);
@@ -197,4 +200,16 @@ export class getAllUsers extends Component {
     }
          
 }
-export default getAllUsers;
+
+getAllUsers.propTypes = {
+    getAlluser: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired
+  };
+
+  const mapStateToProps = state => {
+    return ({
+    user:state.userProfile.user
+  })
+};
+export default connect(mapStateToProps, { getAlluser })(getAllUsers);
+// export default getAllUsers;

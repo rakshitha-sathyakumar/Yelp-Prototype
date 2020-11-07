@@ -1,4 +1,4 @@
-import { APPETIZER, SALAD, GET_MAINCOURSE, GET_DESSERT, GET_BEVERAGES} from '../actions/types';
+import { APPETIZER, SALAD, GET_MAINCOURSE, GET_DESSERT, GET_BEVERAGES, GET_ALLUSERMENU} from '../actions/types';
 
  const initialState = {
      user: []
@@ -33,6 +33,12 @@ import { APPETIZER, SALAD, GET_MAINCOURSE, GET_DESSERT, GET_BEVERAGES} from '../
                 ...state,
                 user: action.payload
             };
+
+        case GET_ALLUSERMENU:
+            return {
+                ...state,
+                user: action.payload
+            }
         default:
             return state
     }

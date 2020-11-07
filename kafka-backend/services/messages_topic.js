@@ -29,7 +29,7 @@ async function addRestMessage(msg, callback) {
         .then(order => {
                 response.status = 200;
                 response.data = order;
-                response.message = "MESSAGE_ADDED" ;
+                response.message = "MESSAGE_SENT" ;
                 console.log(order);
                 // console.log("Returning error");
                 return callback(null, response);

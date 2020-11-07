@@ -1,4 +1,4 @@
-import { APPETIZER, SALAD, GET_MAINCOURSE, GET_DESSERT, GET_BEVERAGES} from "./types";
+import { APPETIZER, SALAD, GET_MAINCOURSE, GET_DESSERT, GET_BEVERAGES, GET_ALLUSERMENU } from "./types";
 import axios from "axios";
 import backendServer from "../backendServer";
 
@@ -79,4 +79,22 @@ export const getbeverage = () => dispatch => {
             });
         }
     });
+}
+
+export const getAllMenuUser = () => dispatch => {
+    axios.defaults.withCredentials = true;
+    axios.get(`${backendServer}/yelp/viewMenu/${localStorage.getItem("rest_id")}`)
+    .then(response => dispatch({
+        type: GET_ALLUSERMENU,
+        payload: response.data
+    }))
+    .catch(error => {
+        if (error.response && error.response.data) {
+            return dispatch({
+                type: GET_ALLUSERMENU,
+                payload: error.response.data
+            });
+        }
+    });
+
 }

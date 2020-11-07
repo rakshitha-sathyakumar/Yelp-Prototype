@@ -16,7 +16,7 @@ router.post('/initiate', (req, res) => {
     } else {
       //console.log("Inside else", results);
       if (results.status === 200) {
-        return res.status(results.status).send(results.data);
+        return res.send(results.message);
       } else {
         return res.status(results.status).send(results.errors);
       }

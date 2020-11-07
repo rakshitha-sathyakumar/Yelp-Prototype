@@ -43,7 +43,6 @@ handleUpdate = (e) => {
             website: e.target.website.value,
             yelpingSince: e.target.yelpingsince.value
         }
-  //console.log(data);
   this.props.updateUser(data);
 };
     render() {

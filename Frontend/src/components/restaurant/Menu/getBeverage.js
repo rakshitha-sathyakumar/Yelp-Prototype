@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import Navigationbar from '../../navigation';
-// import userProfile from './profile';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-// import backgroundImage from '../images/menuCard.jpg';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Form, Button, Card, CardGroup} from 'react-bootstrap';
@@ -13,7 +11,6 @@ import '../pagination.css';
 import {getbeverage} from '../../../actions/menuAction';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-// import { getMainCourse } from './getMaincourse';
 
 
 export class getBeverage extends Component {
@@ -31,10 +28,6 @@ export class getBeverage extends Component {
     componentDidMount() {
         this.props.getbeverage();
         console.log(this.props.user)
-        // axios.get(`${backendServer}/yelp/viewMenu/Beverage/${localStorage.getItem("rest_id")}`)
-        // .then(res => {
-        //     this.setState({ beverageList: res.data });
-        // });
     }
 
     handlePageClick = e => {
@@ -137,5 +130,3 @@ getBeverage.propTypes = {
 };
 
 export default connect(mapStateToProps, { getbeverage })(getBeverage);
-//export default getAppetizer;
-//export default getBeverage;

@@ -4,7 +4,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import PropTypes from 'prop-types';
 import profilepic from './../images/download.png'
 import { connect } from 'react-redux';
-import { getUser } from '../../actions/userProfileAction';
+import { getUser, updateProfilePic } from '../../actions/userProfileAction';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Jumbotron, CardImg} from 'react-bootstrap';
@@ -38,17 +38,11 @@ class userProfile extends Component {
             fileText: this.state.fileText, 
             user_id: localStorage.getItem("user_id")
         }
-        return axios.post(`${backendServer}/yelp/userProfile/updateProfilePic`, data)
-        .then((response) => {
-            if (response.status === 200) {
-              alert("Profilepic added")
-              //window.location = "/userProfile"
-            }
-          })
-          .catch(function(error) {
-             alert("Error")
-          })
+        this.props.updateProfilePic(data);
+        if(this.props.status === 200) {
+            window.location = "/userProfile"
         }
+    }
 
     onImageChange = (e) => {
         if(e.target.files && e.target.files[0]) {
@@ -188,14 +182,17 @@ class userProfile extends Component {
 
 userProfile.propTypes = {
     getUser: PropTypes.func.isRequired,
-    user: PropTypes.object.isRequired
+    updateProfilePic: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired,
+    status: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => { 
     return ({
-    user: state.userProfile.user
+    user: state.userProfile.user,
+    status: state.userProfile.status
 })};
 
-export default connect(mapStateToProps, { getUser })(userProfile);
+export default connect(mapStateToProps, { getUser, updateProfilePic  })(userProfile);
 
 // export default userProfile;

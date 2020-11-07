@@ -1,12 +1,12 @@
 import {ADD_EVENT} from '../actions/types';
-import {GET_RESTEVENT} from '../actions/types';
+import {GET_RESTEVENT, GET_ALLEVENT, GET_USERREGLIST} from '../actions/types';
 
 const initialState = {
-    event: []
+    event: [], 
+    user: []
 }
 
 export default function(state = initialState, action){
-    console.log(action.payload);
     switch(action.type){
         case ADD_EVENT:
             return {
@@ -17,6 +17,18 @@ export default function(state = initialState, action){
             return {
                 ...state,
                 event: action.payload
+            };
+
+        case GET_ALLEVENT:
+            return {
+                ...state,
+                event: action.payload
+            };
+
+        case GET_USERREGLIST:
+            return {
+                ...state,
+                user: action.payload
             };
 
         default:

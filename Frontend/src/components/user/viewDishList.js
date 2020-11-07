@@ -8,25 +8,59 @@ import { Link } from 'react-router-dom';
 import { Form, Button, Card, CardGroup} from 'react-bootstrap';
 import axios from 'axios';
 import backendServer from "../../backendServer";
+import { connect } from 'react-redux';
+import { getAllMenuUser } from '../../actions/menuAction';
+import { addOrder } from '../../actions/orderAction';
+import ReactPaginate from 'react-paginate';
+import '../restaurant/pagination.css';
+import PropTypes from 'prop-types';
 
 export class getDish extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            menuList: []
+            menuList: [],
+            offset: 0,
+            perPage: 3,
+            currentPage: 0,
+            pageCount: null
         };
         //this.changeHandler = this.changeHandler.bind(this);
         this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
     }
 
     componentDidMount() {
-        axios.get(`${backendServer}/yelp/viewMenu/${localStorage.getItem("rest_id")}`)
-        .then(res => {
-            //console.log(res.data)
-            this.setState({ menuList: res.data });
-            // console.log(this.state.menuList);
-        });
+        this.props.getAllMenuUser();
+        // axios.get(`${backendServer}/yelp/viewMenu/${localStorage.getItem("rest_id")}`)
+        // .then(res => {
+        //     //console.log(res.data)
+        //     this.setState({ menuList: res.data });
+        //     // console.log(this.state.menuList);
+        // });
     }
+
+    handlePageClick = e => {
+        alert("inside handle");
+        const selectedPage = e.selected;
+        const offset = selectedPage * this.state.perPage;
+
+        this.setState({
+            currentPage: selectedPage,
+            offset: offset
+        }
+        );
+    };
+
+
+    componentWillReceiveProps(nextProps){
+        console.log(nextProps)
+        this.setState({
+          ...this.state,
+          menuList : !nextProps.user ? this.state.menuList : nextProps.user,
+          pageCount: Math.ceil(this.state.menuList.length / this.state.perPage)  
+        }
+       );	
+      }
 
 
     handleCheckboxChange = (e) => {
@@ -59,22 +93,48 @@ export class getDish extends Component {
             time: current_time
         }
         console.log(data);
-        return axios.post(`${backendServer}/yelp/order`,data)
-        .then((response) => {
-            console.log(response.status)
-          if (response.status === 200) {
-            alert("Order Successful ")
-            window.location = `/user/orders`
-          }
-        })
-        .catch(function(error) {
-           alert("Error")
-        })
+        this.props.addOrder(data);
+        // return axios.post(`${backendServer}/yelp/order`,data)
+        // .then((response) => {
+        //     console.log(response.status)
+        //   if (response.status === 200) {
+        //     alert("Order Successful ")
+        //     window.location = `/user/orders`
+        //   }
+        // })
+        // .catch(function(error) {
+        //    alert("Error")
+        // })
       }
     
     render () {
+        console.log(this.props.user)
         console.log(this.state.menuList);
-        let renderMenu = this.state.menuList.map(menu => {
+
+        const count = this.state.menuList.length;
+        const slice = this.state.menuList.slice(this.state.offset, this.state.offset + this.state.perPage);
+        
+
+        let paginationElement = (
+            <ReactPaginate
+              previousLabel={"← Previous"}
+              nextLabel={"Next →"}
+              breakLabel={<span className="gap">...</span>}
+              pageCount={Math.ceil(this.state.menuList.length / this.state.perPage) > 0 ? Math.ceil(this.state.menuList.length / this.state.perPage) : 10}
+              onPageChange={this.handlePageClick}
+              forcePage={this.state.currentPage}
+              containerClassName={"pagination"}
+              previousLinkClassName={"previous_page"}
+              nextLinkClassName={"next_page"}
+              disabledClassName={"disabled"}
+              activeClassName={"active"}
+            />
+          );
+
+        console.log(this.state.menuList);
+        let renderMenu;
+        if(this.state.menuList) {
+        renderMenu = slice.map(menu => {
             return (
                 <div class="container">
                     <Card style={{marginLeft: "25px", border: "none"}}>
@@ -111,6 +171,7 @@ export class getDish extends Component {
                 </div>
             )
         })
+        }
         return (
             <React.Fragment>
             <Navigationbar/>
@@ -119,10 +180,29 @@ export class getDish extends Component {
                 <h1 style={{margin: "10px", color: "red"}}> Full menu </h1>
                 </center>
                     {renderMenu}
+                <div>
+                    {paginationElement}
+                </div>
             </div>
         </React.Fragment>
         )
     }
          
 }
-export default getDish;
+
+getDish.propTypes = {
+    getAllMenuUser: PropTypes.func.isRequired,
+    addOrder: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired,
+    status: PropTypes.object.isRequired
+  };
+
+  const mapStateToProps = state => {
+    return ({
+    user: state.getMenu.user, 
+    status: state.orders.state
+  })
+};
+
+export default connect(mapStateToProps, { getAllMenuUser, addOrder})(getDish);
+// export default getDish;

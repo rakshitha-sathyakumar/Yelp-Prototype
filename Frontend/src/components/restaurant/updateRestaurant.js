@@ -78,10 +78,6 @@ handleUpdate = (e) => {
     fileName: this.state.fileText
   }
   this.props.updateRest(data);
-  // if(action.payload === "RESTAURANT_UPDATED") {
-  //   alert("Resayuarnt details updated")
-  //   window.location = "/restaurant"
-  //   }
 };
 
     render() {

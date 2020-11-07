@@ -109,7 +109,7 @@ router.get('/beverage/:rest_id', (req, res) => {
 
 router.get('/:rest_id', (req, res) => {
   console.log(req.params.rest_id);
-    kafka.make_request("userSignUp_topic", { "path": "getMenu", "id": req.params.rest_id}, function (err, results) {
+    kafka.make_request("userSignUp_topic", { "path": "getAllMenu", "id": req.params.rest_id}, function (err, results) {
       //console.log("In make request call back");
       console.log(results.data[0].menu);
       if (err) {

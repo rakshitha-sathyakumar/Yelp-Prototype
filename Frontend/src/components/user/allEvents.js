@@ -9,6 +9,9 @@ import { Link } from 'react-router-dom';
 import { Form, Button, Card, CardGroup, Dropdown} from 'react-bootstrap';
 import axios from 'axios';
 import backendServer from "../../backendServer";
+import {getAllevents, getUserReglist} from '../../actions/eventAction';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 export class getAllEvents extends Component {
     constructor(props) {
@@ -23,16 +26,29 @@ export class getAllEvents extends Component {
     }
 
     componentDidMount() {
-        axios.get(`${backendServer}/yelp/viewEvents`)
-        .then(res => {
-            this.setState({ eventList: res.data, tempEventList: res.data });
-        });
+        this.props.getAllevents();
+        // axios.get(`${backendServer}/yelp/viewEvents`)
+        // .then(res => {
+        //     this.setState({ eventList: res.data, tempEventList: res.data });
+        // });
 
-        axios.get(`${backendServer}/yelp/viewEvents/user/${localStorage.getItem("user_id")}`)
-        .then(res => {
-            this.setState({ userRegList: res.data });
-        });
+        this.props.getUserReglist();
+        // axios.get(`${backendServer}/yelp/viewEvents/user/${localStorage.getItem("user_id")}`)
+        // .then(res => {
+        //     this.setState({ userRegList: res.data });
+        // });
     }
+
+    componentWillReceiveProps(nextProps){
+        this.setState({
+          ...this.state,
+          eventList : !nextProps.event ? this.state.eventList : nextProps.event,
+          tempEventList: !nextProps.event ? this.state.tempEventList : nextProps.event,
+          userRegList: !nextProps.user ? this.state.userRegList : nextProps.user
+          //pageCount: Math.ceil(this.state.tempRestOrder.length / this.state.perPage)  
+        }
+       );	
+      }
 
     handleOrder = (e) => {
         if (localStorage.getItem("user") === 'False')
@@ -64,6 +80,11 @@ export class getAllEvents extends Component {
           });
           this.setState({ eventList: sorted });
       }
+
+      handleLogout = () => {
+        window.localStorage.clear();
+        window.location ='/'
+      };
     
 
     handleSearch = (e) => {
@@ -75,10 +96,19 @@ export class getAllEvents extends Component {
         })
         this.setState({searchList: "True"})
     }
+    handleClick = (e) => {
+        if (localStorage.getItem("user") === 'False')
+        {
+            window.location = "/restaurant";
+        } else {
+            window.location = "/userProfile";
+        }
+    }
 
     render () {
-        console.log(this.state.eventList);
-        let renderEvents = this.state.eventList.map(event => {
+        let renderEvents;
+        if(this.state.eventList) {
+        renderEvents = this.state.eventList.map(event => {
             return (
                 <div>
                     <Card style={{borderBottom: "none", borderLeft: "none"}}>
@@ -95,6 +125,7 @@ export class getAllEvents extends Component {
                 </div> 
             )
         })
+        }
         let renderRegEvents = this.state.userRegList.map(reg => {
             return (
                 <div>
@@ -177,7 +208,8 @@ export class getAllEvents extends Component {
                     <button onClick={this.handleSearch} style = {{ marginLeft: "5px", width: "60px", height:"38px", borderRadius:"5px", background: "red", color: "white", border: "1px solid red", cursor: "pointer"}} type="submit"><i class="fa fa-search"></i></button>
                 </form>
                 <form class="form-inline ml-0">
-                <Button href='/allEvents' style = {{margin:"25px 0px", marginLeft: "15px", backgroundColor: "transparent", border: 'none', fontSize: "17px", color: "red", outline: 'none'}} variant='link'> <i class="fas fa-calendar"></i> Events</Button> 
+                <Button href='/allUsers' style = {{margin:"25px 0px", backgroundColor: "transparent", border: 'none', fontSize: "17px", color: "red", outline: 'none'}} variant='link'> <i class="fas fa-users"></i> Users</Button>
+                <Button href='/allEvents' style = {{margin:"25px 0px", backgroundColor: "transparent", border: 'none', fontSize: "17px", color: "red", outline: 'none'}} variant='link'> <i class="fas fa-calendar"></i> Events</Button> 
                 <Link  to={{
                     pathname: '/list',
                     state: {
@@ -203,4 +235,20 @@ export class getAllEvents extends Component {
     }
          
 }
-export default getAllEvents;
+
+getAllEvents.propTypes = {
+    getAllevents: PropTypes.func.isRequired,
+    getUserReglist: PropTypes.func.isRequired,
+    event: PropTypes.object.isRequired, 
+    user: PropTypes.object.isRequired
+  };
+
+  const mapStateToProps = state => {
+    return ({
+    event: state.events.event,
+    user:state.events.user
+
+  })
+};
+export default connect(mapStateToProps, { getAllevents, getUserReglist })(getAllEvents);
+//export default getAllEvents;

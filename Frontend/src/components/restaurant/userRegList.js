@@ -21,9 +21,7 @@ export class getRegUserList extends Component {
         console.log()
         axios.get(`${backendServer}/yelp/regUser/${this.props.match.params.event_id}`)
         .then(res => {
-            //console.log(res.data)
             this.setState({ regUserList: res.data });
-            //console.log(this.state.appetizerList);
         });
     }
 

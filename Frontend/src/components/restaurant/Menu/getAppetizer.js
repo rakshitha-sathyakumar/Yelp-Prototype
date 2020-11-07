@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import Navigationbar from '../../navigation';
-// import userProfile from './profile';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-// import backgroundImage from '../images/menuCard.jpg';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
@@ -29,15 +27,6 @@ export class getAppetizer extends Component {
     componentDidMount() {
         this.props.getappetizer();
         console.log(this.props);
-        // this.setState({appetizerList: this.props.user});
-        // this.forceUpdate();
-        // console.log(this.props);
-        // axios.get(`${backendServer}/yelp/viewMenu/appetizer/${localStorage.getItem("rest_id")}`)
-        // .then(res => {
-        //     console.log(res.data)
-        //     
-        //     //console.log(this.state.appetizerList);
-        // });
     }
 
     handlePageClick = e => {

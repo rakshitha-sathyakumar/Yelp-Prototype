@@ -49,7 +49,7 @@ async function restSignUp(msg, callback) {
     let response = {};
     console.log("In restauraunt signup topic service. Msg: ", msg);
 
-    await Rest.findById( { _id: msg.body } )
+    await Rest.findOne( { email: msg.body.email } )
         .then(rest => {
 
             if (rest) {

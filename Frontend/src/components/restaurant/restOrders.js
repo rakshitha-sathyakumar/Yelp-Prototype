@@ -10,7 +10,7 @@ import axios from 'axios';
 import backendServer from '../../backendServer';
 import ReactPaginate from 'react-paginate';
 import './pagination.css';
-import { getRestOrder } from '../../actions/orderAction'
+import { getRestOrder, updateOrderStatus, sendMessage } from '../../actions/orderAction'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -35,12 +35,6 @@ export class restOrders extends Component {
     componentDidMount() {
         this.props.getRestOrder();
         console.log(this.props);
-        // axios.get(`${backendServer}/yelp/order/rest/${localStorage.getItem("rest_id")}`)
-        // .then(res => {
-            // this.setState({ restOrders: this.props.user,
-            // tempRestOrder: this.props.user });
-            //console.log(this.state.appetizerList);
-        // });
     }
 
 
@@ -56,9 +50,7 @@ export class restOrders extends Component {
 
 
     handleFilter = (e) => {
-        //console.log(e.target.id);
         e.preventDefault();
-        //this.setState({orders: e.target.id})
         let orders = e.target.id;
         let filteredData = this.state.restOrders.filter(order =>
             order.finalOrderStatus == orders
@@ -107,17 +99,7 @@ export class restOrders extends Component {
             order_status: this.state.orderStatus,
         }
         console.log(data);
-        return axios.post(`${backendServer}/yelp/order/update`,data)
-        .then((response) => {
-            console.log(response.status)
-          if (response.status === 200) {
-            alert("Order updated")
-           window.location = `/restOrders`
-          }
-        })
-        .catch(function(error) {
-           alert("Error")
-        })
+        this.props.updateOrderStatus(data);
       }
 
       handleReset = (e) => {
@@ -149,12 +131,13 @@ export class restOrders extends Component {
             owner: localStorage.getItem("rest_name")
         }
         console.log(data);
-        axios.post(`${backendServer}/yelp/messages/initiate`, data)
-        .then(response => {
-            if(response.status === 200) {
-                alert("Reply successfully sent")
-            }
-        })
+        this.props.sendMessage(data);
+        // axios.post(`${backendServer}/yelp/messages/initiate`, data)
+        // .then(response => {
+        //     if(response.status === 200) {
+        //         alert("Reply successfully sent")
+        //     }
+        // })
     }
 
       
@@ -337,13 +320,16 @@ export class restOrders extends Component {
 
 restOrders.propTypes = {
     getRestOrder: PropTypes.func.isRequired,
-    user: PropTypes.object.isRequired
+    updateOrderStatus: PropTypes.func.isRequired,
+    sendMessage: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired,
+    status: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => { 
     return ({
-    user: state.orders.user
+    user: state.orders.user,
+    status: state.orders.status
 })};
 
-export default connect(mapStateToProps, { getRestOrder })(restOrders);
-// export default restOrders;
+export default connect(mapStateToProps, { getRestOrder, updateOrderStatus, sendMessage })(restOrders);

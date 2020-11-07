@@ -7,7 +7,9 @@ import axios from 'axios';
 import backendServer from '../../backendServer';
 import ReactPaginate from 'react-paginate';
 import '../restaurant/pagination.css';
-// import { getMainCourse } from './getMaincourse';
+import { getUserOrder, cancelOrder } from '../../actions/orderAction';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 export class userOrders extends Component {
     constructor(props) {
@@ -23,10 +25,7 @@ export class userOrders extends Component {
     }
 
     componentDidMount() {
-        axios.get(`${backendServer}/yelp/order/${localStorage.getItem("user_id")}`)
-        .then(res => {
-            this.setState({ userOrders: res.data, tempUserOrders: res.data });
-        });
+        this.props.getUserOrder();
     }
 
     handleCheckboxChange = (e) => {
@@ -45,17 +44,18 @@ export class userOrders extends Component {
            order_id: e.target.id,
            order_status: e.target.name
        }
-       return axios.post(`${backendServer}/yelp/order/update`,data)
-        .then((response) => {
-            console.log(response.status)
-          if (response.status === 200) {
-            alert("Order cancelled")
-           window.location = `/user/orders`
-          }
-        })
-        .catch(function(error) {
-           alert("Error")
-        })
+       this.props.cancelOrder(data);
+    //    return axios.post(`${backendServer}/yelp/order/update`,data)
+    //     .then((response) => {
+    //         console.log(response.status)
+    //       if (response.status === 200) {
+    //         alert("Order cancelled")
+    //        window.location = `/user/orders`
+    //       }
+    //     })
+    //     .catch(function(error) {
+    //        alert("Error")
+    //     })
     }
 
       handleReset = (e) => {
@@ -79,7 +79,8 @@ export class userOrders extends Component {
     componentWillReceiveProps(nextProps){
         this.setState({
           ...this.state,
-          beverageList : !nextProps.tempUserOrders ? this.state.tempUserOrders : nextProps.tempUserOrders,
+          userOrders : !nextProps.user ? this.state.userOrders : nextProps.user,
+          tempUserOrders: !nextProps.user ? this.state.tempUserOrders : nextProps.user,
           pageCount: Math.ceil(this.state.tempUserOrders.length / this.state.perPage)  
         }
        );	
@@ -194,4 +195,17 @@ export class userOrders extends Component {
     }
          
 }
-export default userOrders;
+
+userOrders.propTypes = {
+    getUserOrder: PropTypes.func.isRequired,
+    cancelOrder: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired 
+  }
+  
+  const mapStateToProps = state => { 
+      return ({
+      user: state.orders.user
+  })};
+  
+  export default connect(mapStateToProps, {getUserOrder, cancelOrder })(userOrders);
+//export default userOrders;

@@ -6,7 +6,6 @@ import { ADD_DISH, GET_DISH, UPDATE_DISH } from '../actions/types';
  };
 
  export default function(state = initialState, action){
-     console.log(action.payload);
     switch(action.type){
         case ADD_DISH:
             return {

@@ -63,7 +63,6 @@ class restUserProfile extends Component {
 
     handleOpenModal() {
         this.setState({ showModal: true });
-        // this.props.getEventRegistrationDetails(arg);
       }
 
       handleCloseModal() {

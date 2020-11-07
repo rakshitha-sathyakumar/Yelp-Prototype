@@ -24,7 +24,7 @@ class viewRest extends Component {
             searchKeyword: null,
             searchCategory: 0,
             offset: 0,
-            perPage: 1,
+            perPage: 2,
             currentPage: 0,
             pageCount: null
         };
@@ -166,7 +166,6 @@ componentWillReceiveProps(nextProps){
                         <Card.Text> <i class="fas fa-location-arrow"></i> {rest.street}, {rest.city}, {rest.zipcode}</Card.Text>
                         <Card.Text> <i class="fas fa-bread-slice"></i> {rest.cuisine} </Card.Text>
                         <Card.Text> <i class="fas fa-check" style={{color: "green"}}></i> {rest.deliveryMethod} </Card.Text>
-                        {/* <Card.Text>{event.event_description}</Card.Text> */}
                         </Card.Body>
                     </Card>
                     <br/>

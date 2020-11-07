@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import Navigationbar from '../../navigation';
-// import userProfile from './profile';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-// import backgroundImage from '../images/menuCard.jpg';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Form, Button, Card, CardGroup} from 'react-bootstrap';
@@ -29,10 +27,6 @@ export class getMaincourse extends Component {
     componentDidMount() {
         this.props.getmaincourse();
         console.log(this.props.user);
-        // axios.get(`${backendServer}/yelp/viewMenu/maincourse/${localStorage.getItem("rest_id")}`)
-        // .then(res => {
-        //     this.setState({ maincourseList: res.data });
-        // });
     }
 
     handlePageClick = e => {
@@ -83,7 +77,7 @@ export class getMaincourse extends Component {
         let renderMaincourse;
         if (this.state.maincourseList) {
             renderMaincourse = slice.map((menu,key) => {
-            var fileName = menu.fileText
+            var fileName = menu.dishFileName
             var imgSrc = `${backendServer}/yelp/upload/restaurant/${fileName}`
             return (
                 <div>
@@ -135,4 +129,3 @@ getMaincourse.propTypes = {
 };
 
 export default connect(mapStateToProps, { getmaincourse })(getMaincourse);
-// export default getMaincourse;

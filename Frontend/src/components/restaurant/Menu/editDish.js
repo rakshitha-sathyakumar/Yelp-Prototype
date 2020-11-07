@@ -51,23 +51,11 @@ onUpdate = (e) => {
     description: this.state.description,
     category: this.state.category
   }
-  // console.log(data.category);
+
   this.props.updateDish(data);
   if(this.props.status === 200) {
     window.location = `/viewDish`
   }
-  //localStorage.setItem("dish_category", data.category)
-  // return axios.post(`${backendServer}/yelp/editDish`,data)
-  // .then((response) => {
-  //     console.log(response.status)
-  //   if (response.status === 200) {
-  //     alert("Dish updated")
-  //     window.location = `/menu/${data.category}`
-  //   }
-  // })
-  // .catch(function(error) {
-  //    alert("Error")
-  // })
 }
     render() {
       //const menuList = this.props.getUser;

@@ -1,5 +1,5 @@
 import {ADD_EVENT} from './types';
-import {GET_RESTEVENT} from './types';
+import {GET_RESTEVENT, GET_USERREGLIST, GET_ALLEVENT} from './types';
 import axios from "axios";
 import backendServer from "../backendServer";
 
@@ -31,3 +31,27 @@ import backendServer from "../backendServer";
             console.log(error);
         });
 }
+
+export const getAllevents = () => dispatch => {
+    axios.get(`${backendServer}/yelp/viewEvents`)
+        .then(response => dispatch({
+            type: GET_ALLEVENT,
+            payload: response.data
+        }))
+        .catch(error => {
+            console.log(error);
+        });
+}
+
+
+export const getUserReglist = () => dispatch => {
+    axios.get(`${backendServer}/yelp/viewEvents/user/${localStorage.getItem("user_id")}`)
+        .then(response => dispatch({
+            type: GET_USERREGLIST,
+            payload: response.data
+        }))
+        .catch(error => {
+            console.log(error);
+        });
+}
+

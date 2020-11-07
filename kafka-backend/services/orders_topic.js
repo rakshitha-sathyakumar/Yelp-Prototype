@@ -125,7 +125,7 @@ async function updateOrderStatus(msg, callback) {
             console.log("User exists");
             response.status = 200;
             response.message = "ORDERS_UPDATED";
-            response.data = order
+            response.data = "ORDERS_UPDATED"
             return callback(null, response);
         })
         .catch(err => {

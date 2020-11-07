@@ -30,12 +30,6 @@ export class getSalad extends Component {
     componentDidMount() {
         this.props.getsalad();
         console.log(this.props.user);
-        // axios.get(`${backendServer}/yelp/viewMenu/salad/${localStorage.getItem("rest_id")}`)
-        // .then(res => {
-        //     console.log(res.data)
-        //     this.setState({ saladList: res.data });
-        //     //console.log(this.state.appetizerList);
-        // });
     }
 
     handlePageClick = e => {
@@ -85,7 +79,7 @@ export class getSalad extends Component {
         let renderSalad;
         if(this.state.saladList){
         renderSalad = slice.map((menu, key) => {
-            var fileName = menu.fileText
+            var fileName = menu.dishFileName
             var imgSrc = `${backendServer}/yelp/upload/restaurant/${fileName}`
             return (
                 <div>
@@ -138,4 +132,3 @@ getSalad.propTypes = {
 };
 
 export default connect(mapStateToProps, { getsalad })(getSalad);
-// export default getSalad;

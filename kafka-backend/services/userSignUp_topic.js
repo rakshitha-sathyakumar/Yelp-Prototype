@@ -27,6 +27,10 @@ exports.userSignUpService = function (msg, callback) {
             getMenu(msg, callback);
             break;
         
+        case "getAllMenu":
+            getAllMenu(msg, callback);
+            break;
+        
         case "getAllUsers":
             getAllUsers(msg, callback);
             break; 
@@ -141,7 +145,7 @@ async function profilePicUpdate(msg, callback) {
         console.log(user);
         console.log("User profile updated successfully");
         response.status = 200;
-        response.message = "USER_UPDATED";
+        response.message = "PROFILEPIC_UPDATED";
         return callback(null, response);
     })
     .catch(err => {
@@ -154,7 +158,7 @@ async function getMenu(msg, callback) {
     let err = {};
     let response = {};
     console.log("In get menu topic service. Msg: ", msg);
-    console.log(msg.body);
+    console.log(msg.keyword);
     if (msg.category === '1') {
         filter = { deliveryMethod: { $regex: msg.keyword, $options: 'i' } };
     }
@@ -175,11 +179,11 @@ async function getMenu(msg, callback) {
     }
     console.log(filter);
     await Rest.find(filter)
-        .then(user => {
-        console.log(user);
+        .then(rest => {
+        console.log(rest);
         console.log("Restaurant fetched successfully");
         response.status = 200;
-        response.data = user;
+        response.data = rest;
         response.message = "RESTAURANT_FETCHED";
         return callback(null, response);
     })
@@ -187,6 +191,27 @@ async function getMenu(msg, callback) {
         console.log(err)
     });
 
+}
+
+
+
+async function getAllMenu(msg, callback) {
+    let err = {};
+    let response = {};
+    console.log("In get user details topic service. Msg: ", msg);
+    console.log(msg.id);
+    
+    await Rest.find({_id: msg.id})
+    .then(user => {
+        console.log(user);
+        response.status = 200;
+        response.message = "USERS_FETCHED";
+        response.data = user
+        return callback(null, response);
+    })
+    .catch(err => {
+        console.log(err)
+    });
 }
 
 async function getAllUsers(msg, callback) {

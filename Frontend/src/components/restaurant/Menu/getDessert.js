@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import Navigationbar from '../../navigation';
-// import userProfile from './profile';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-// import backgroundImage from '../images/menuCard.jpg';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Form, Button, Card, CardGroup} from 'react-bootstrap';
@@ -30,12 +28,6 @@ export class getDessert extends Component {
     componentDidMount() {
         this.props.getdessert();
         console.log(this.props.user)
-        // axios.get(`${backendServer}/yelp/viewMenu/dessert/${localStorage.getItem("rest_id")}`)
-        // .then(res => {
-        //     //console.log(res.data)
-        //     this.setState({ dessertList: res.data });
-        //     //console.log(this.state.appetizerList);
-        // });
     }
 
     handlePageClick = e => {
@@ -136,4 +128,3 @@ getDessert.propTypes = {
 };
 
 export default connect(mapStateToProps, { getdessert })(getDessert);
-// export default getDessert;
