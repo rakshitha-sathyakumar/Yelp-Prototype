@@ -253,7 +253,7 @@ async function updateDishDetails(msg, callback) {
     console.log(msg.restId);
     console.log(msg.dishId);
 
-    await Rest.findOne(
+    await Rest.findOneAndUpdate(
         {'menu._id': msg.dishId}, 
         {$set :{'menu.$': msg.body}},
         { safe: true, new: true, useFindAndModify: false }) 

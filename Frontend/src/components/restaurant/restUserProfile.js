@@ -127,21 +127,22 @@ class restUserProfile extends Component {
                 </li>
             </ul>
             <Modal show={this.state.showModal} onHide={this.handleCloseModal}>
-                            <Modal.Header closeButton>
-                                    <Modal.Title style={{fontSize: "30px"}}>Send a message to {this.state.restUserProfile.firstName}</Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body>
-                                <h4> Order Id: {this.props.location.state.orderId}</h4>
-                            <input class="form-control input-md" type='text' style={{ height: '70px'}} onChange={this.handleInputChange}/>
-                            </Modal.Body>
-                            <Modal.Footer>
-                                <Button style={{border: "1px solid red", backgroundColor: "red", color: 'white',  width: "100px", borderRadius: '5px'}} onClick = {this.handleSendMessage}>Send</Button>
-                            </Modal.Footer>
-                        </Modal>
+                <Modal.Header closeButton>
+                    <Modal.Title style={{fontSize: "30px"}}>Send a message to {this.state.restUserProfile.firstName}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <h4> Order Id: {this.props.location.state.orderId}</h4>
+                    <input class="form-control input-md" type='text' style={{ height: '70px'}} onChange={this.handleInputChange}/>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button style={{border: "1px solid red", backgroundColor: "red", color: 'white',  width: "100px", borderRadius: '5px'}} onClick = {this.handleSendMessage}>Send</Button>
+                </Modal.Footer>
+            </Modal>
        </div>
 
     }
-    console.log(this.props);
+        var fileName = this.state.restUserProfile.fileName
+        var imgSrc = `${backendServer}/yelp/upload/restaurant/${fileName}`
 
         return (
         <div style={{margin:"5px"}}>
@@ -150,7 +151,7 @@ class restUserProfile extends Component {
                     <div class='row'>
                         <div class='col-xs-3 card profilePic' style={{position:"absolute"}}>
                             <card>
-                                <CardImg variant='top' src={profilepic} className='profileImg'/>
+                                <CardImg style={{height: "300px", width: "225px"}}variant='top' src={imgSrc} className='profileImg'/>
                             </card>
                         </div>
                         <div class='col-xs-4 profileName' style={{position: "relative", marginLeft: "250px"}}>
@@ -160,36 +161,6 @@ class restUserProfile extends Component {
                             
                         </div>
                        {renderFollow}
-                       {/* <Modal show={this.state.showModal} onHide={this.handleCloseModal}>
-                            <Modal.Header closeButton>
-                                    <Modal.Title style={{fontSize: "30px"}}>Send a message to {this.state.restUserProfile.firstName}</Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body>
-                                <h4> Order Id: {this.props.location.state.orderId}</h4>
-                            <input class="form-control input-md" type='text' style={{ height: '70px'}} onChange={this.handleInputChange}/>
-                            </Modal.Body>
-                            <Modal.Footer>
-                                <Button style={{border: "1px solid red", backgroundColor: "red", color: 'white',  width: "100px", borderRadius: '5px'}} onClick = {this.handleSendMessage}>Send</Button>
-                            </Modal.Footer>
-                        </Modal> */}
-                        {/* <Modal 
-                        isOpen = {this.state.showModal}
-                        className='dialog'>
-                            <br />
-                            <div class="container">
-                            <div style={{overflow: "hidden"}}>
-                            <h3 style={{float: 'left', fontWeight: "bold"}}> Send a message to {this.state.restUserProfile.firstName} </h3>
-                            <button className='mt-3' onClick={this.handleCloseModal} style={{border: "none", float: "right", backgroundColor: "transparent", color: 'black', fontWeight: "bold", fontSize: "20px"}}> x </button>
-                            </div>
-                            <hr />
-                            <br />
-                            <br />
-                            <input class="form-control input-md" type='text' style={{width: "500px", height: '70px'}} />
-                            <br />
-                            <button style={{border: "1px solid red", backgroundColor: "red", color: 'white',  width: "100px", borderRadius: '5px'}}> Send </button>    
-                            </div> 
-                        </Modal> */}
-
                     </div>
             </div>
             <div class='row' style={{ marginLeft:"10px"}}>

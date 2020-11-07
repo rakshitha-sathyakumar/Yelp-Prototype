@@ -101,7 +101,7 @@ export class getAppetizer extends Component {
                             <Card.Text style={{margin: "10px"}}> ${menu.price}</Card.Text>
                             <div>
                             <Button style={{backgroundColor:"red", border: "1px solid red", marginLeft: "10px"}}>
-                            <Link to = {{pathname: `/editDish/${localStorage.getItem("rest_id")}/${menu.dish_id}`}} style={{color: "white"}}> Edit dish </Link></Button>
+                            <Link to = {{pathname: `/editDish/${localStorage.getItem("rest_id")}/${menu._id}`}} style={{color: "white"}}> Edit dish </Link></Button>
                             </div>
                         </Card>
                         <br/>

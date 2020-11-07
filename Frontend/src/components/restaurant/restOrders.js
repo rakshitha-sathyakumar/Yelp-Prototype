@@ -10,7 +10,9 @@ import axios from 'axios';
 import backendServer from '../../backendServer';
 import ReactPaginate from 'react-paginate';
 import './pagination.css';
-// import { getMainCourse } from './getMaincourse';
+import { getRestOrder } from '../../actions/orderAction'
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 export class restOrders extends Component {
     constructor(props) {
@@ -31,12 +33,14 @@ export class restOrders extends Component {
 
 
     componentDidMount() {
-        axios.get(`${backendServer}/yelp/order/rest/${localStorage.getItem("rest_id")}`)
-        .then(res => {
-            this.setState({ restOrders: res.data,
-            tempRestOrder: res.data });
+        this.props.getRestOrder();
+        console.log(this.props);
+        // axios.get(`${backendServer}/yelp/order/rest/${localStorage.getItem("rest_id")}`)
+        // .then(res => {
+            // this.setState({ restOrders: this.props.user,
+            // tempRestOrder: this.props.user });
             //console.log(this.state.appetizerList);
-        });
+        // });
     }
 
 
@@ -78,7 +82,8 @@ export class restOrders extends Component {
     componentWillReceiveProps(nextProps){
         this.setState({
           ...this.state,
-          beverageList : !nextProps.tempRestOrder ? this.state.tempRestOrder : nextProps.tempRestOrder,
+          restOrders : !nextProps.user ? this.state.restOrders : nextProps.user,
+          tempRestOrder: !nextProps.user ? this.state.tempRestOrder : nextProps.user,
           pageCount: Math.ceil(this.state.tempRestOrder.length / this.state.perPage)  
         }
        );	
@@ -155,6 +160,7 @@ export class restOrders extends Component {
       
 
     render () {
+        console.log(this.props);
         console.log(this.state.tempRestOrder);
 
         const count = this.state.tempRestOrder.length;
@@ -328,4 +334,16 @@ export class restOrders extends Component {
     }
          
 }
-export default restOrders;
+
+restOrders.propTypes = {
+    getRestOrder: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired
+}
+
+const mapStateToProps = state => { 
+    return ({
+    user: state.orders.user
+})};
+
+export default connect(mapStateToProps, { getRestOrder })(restOrders);
+// export default restOrders;

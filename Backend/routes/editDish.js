@@ -38,9 +38,9 @@ router.post('/', (req, res) => {
     } else {
       //console.log("Inside else", results);
       if (results.status === 200) {
-        return res.end(results.message);
+        return res.end(results.status);
       } else {
-        return res.end(results.message);
+        return res.end(results.status);
       }
     }
   })

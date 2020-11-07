@@ -65,10 +65,7 @@ componentDidUpdate() {
             searchCategory: this.props.location.state.searchCategory,
         },
         () => {
-          axios
-            .get(
-              `${backendServer}/restaurantSearch/${this.state.searchKeyword}/${this.state.searchCategory}`,
-            )
+          axios.get(`${backendServer}/restaurantSearch/${this.state.searchKeyword}/${this.state.searchCategory}`,)
             .then((response) =>
               this.setState({
                 tempRestList: response.data

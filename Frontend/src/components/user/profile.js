@@ -94,11 +94,6 @@ class userProfile extends Component {
             <div class='jumbotron'>
                     <div class='row'>
                         <div class='col-xs-3 card profilePic' style={{position:"absolute"}}>
-                            {/* <label for='profileImage'>
-                                    <a class='btn btn-secondary btn-sm btn-rounded'>
-                                        <i class='fas fa-camera'></i></a>
-                            </label>
-                            <input type='file' name='profileImage' id='profileImage' style={{ display: 'none' }} value='' onChange={this.changeProfileImage}></input> */}
                             <card>
                                 <CardImg style={{height: "300px", width: "225px"}}variant='top' src={imgSrc} className='profileImg'/>
                             </card>

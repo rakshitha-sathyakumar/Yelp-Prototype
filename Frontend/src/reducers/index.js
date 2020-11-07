@@ -6,6 +6,7 @@ import signupReducer from './signupReducer';
 import dishReducer from './dishReducer';
 import menuReducer from './menuReducer';
 import eventReducer from './eventReducer';
+import orderReducer from './orderReducer';
 
 export default combineReducers({
     login: loginReducer,
@@ -14,5 +15,6 @@ export default combineReducers({
     restProfile: restProfileReducer,
     addDish: dishReducer,
     getMenu: menuReducer,
-    events: eventReducer
+    events: eventReducer,
+    orders: orderReducer
 });

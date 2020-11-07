@@ -1,4 +1,5 @@
 import {ADD_EVENT} from './types';
+import {GET_RESTEVENT} from './types';
 import axios from "axios";
 import backendServer from "../backendServer";
 
@@ -19,3 +20,14 @@ import backendServer from "../backendServer";
         });
 
  } 
+
+ export const getRestEvents = () => dispatch => {
+    axios.get(`${backendServer}/yelp/viewEvents/${localStorage.getItem("rest_id")}`)
+        .then(response => dispatch({
+            type: GET_RESTEVENT,
+            payload: response.data
+        }))
+        .catch(error => {
+            console.log(error);
+        });
+}

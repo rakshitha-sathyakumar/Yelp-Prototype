@@ -15,3 +15,5 @@ export const GET_MAINCOURSE = 'GET_MAINCOURSE';
 export const GET_DESSERT = 'GET_DESSERT';
 export const GET_BEVERAGES ='GET_BEVERAGES';
 export const ADD_EVENT = 'ADD_EVENT';
+export const GET_RESTEVENT = 'GET_RESTEVENT';
+export const GET_RESTORDER = 'GET_RESTORDER';

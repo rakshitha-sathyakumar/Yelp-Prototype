@@ -15,6 +15,7 @@ export class getAllEvents extends Component {
         super(props);
         this.state = {
             eventList: [],
+            tempEventList: [],
             userRegList: [],
             searchEventList: [],
             searchList: 'False'
@@ -24,7 +25,7 @@ export class getAllEvents extends Component {
     componentDidMount() {
         axios.get(`${backendServer}/yelp/viewEvents`)
         .then(res => {
-            this.setState({ eventList: res.data });
+            this.setState({ eventList: res.data, tempEventList: res.data });
         });
 
         axios.get(`${backendServer}/yelp/viewEvents/user/${localStorage.getItem("user_id")}`)
@@ -49,6 +50,20 @@ export class getAllEvents extends Component {
             keyword: e.target.value
         })
     }
+
+    sortByDateAsc = () => {
+        let sorted = this.state.eventList.sort((a, b) => {
+            return Date.parse(a.date) - Date.parse(b.date);
+          });
+          this.setState({ eventList: sorted });
+      }
+
+      sortByDateDsc = () => {
+        let sorted = this.state.eventList.sort((a, b) => {
+            return Date.parse(b.date) - Date.parse(a.date);
+          });
+          this.setState({ eventList: sorted });
+      }
     
 
     handleSearch = (e) => {
@@ -124,7 +139,10 @@ export class getAllEvents extends Component {
           <div class="container">
             <center>
                 <h1 style={{margin: "10px", color:"red"}}> List of Events </h1>
+                <Button style = {{margin:"25px 0px", backgroundColor: "transparent", border: 'none', fontSize: "20px", color: "red", outline: 'none'}} variant='link' onClick={this.handleOrder}> Ascending </Button>
+                <Button style = {{margin:"25px 0px", marginLeft: "10px", backgroundColor: "transparent", border: 'none', fontSize: "20px", color: "red", outline: 'none'}} variant='link' onClick={this.handleOrder}> Descending </Button>
             </center>
+
             {renderEvents}
         </div>
         } else {
@@ -139,6 +157,8 @@ export class getAllEvents extends Component {
                 <div class="container">
                 <center>
                     <h1 style={{margin: "10px", color:"red"}}> List of Events </h1>
+                    <Button style = {{margin:"25px 0px", backgroundColor: "red", border: 'none', fontSize: "20px", color: "white", outline: 'none'}} variant='link' onClick={this.sortByDateAsc}> Ascending </Button>
+                    <Button style = {{margin:"25px 10px", backgroundColor: "red", border: 'none', fontSize: "20px", color: "white", outline: 'none'}} variant='link' onClick={this.sortByDateDsc}> Descending </Button>
                 </center>
                     {renderEvents}
                 </div>

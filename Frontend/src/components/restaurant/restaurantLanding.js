@@ -38,11 +38,11 @@ class RestaurantPage extends Component {
 
     componentWillMount() {
         this.props.getRest();
-        axios.get(`${backendServer}/yelp/addReview/${localStorage.getItem("rest_id")}`)
-        .then(res =>{
-        console.log(res);
-        this.setState({reviewList: res.data});
-    })
+        // axios.get(`${backendServer}/yelp/addReview/${localStorage.getItem("rest_id")}`)
+        // .then(res =>{
+        // console.log(res);
+        // this.setState({reviewList: res.data});
+    // })
         // console.log(this.props)
     }
 

@@ -53,6 +53,9 @@ onUpdate = (e) => {
   }
   // console.log(data.category);
   this.props.updateDish(data);
+  if(this.props.status === 200) {
+    window.location = `/viewDish`
+  }
   //localStorage.setItem("dish_category", data.category)
   // return axios.post(`${backendServer}/yelp/editDish`,data)
   // .then((response) => {
@@ -120,15 +123,15 @@ onUpdate = (e) => {
                         <strong>Category</strong>
                     </Form.Label><br />
                     <Form.Check 
-                    name="appetizer" onChange={this.handleRadio} label="Appetizer" />
+                    name="Appetizer" onChange={this.handleRadio} label="Appetizer" />
                     <Form.Check 
-                    name="salads" onChange={this.handleRadio} label="Salads" />
+                    name="Salads" onChange={this.handleRadio} label="Salads" />
                     <Form.Check 
-                    name="mainCourse" onChange={this.handleRadio} label="Main Course" />
+                    name="Main Course" onChange={this.handleRadio} label="Main Course" />
                     <Form.Check 
-                    name="desserts" onChange={this.handleRadio} label="Desserts" />
+                    name="Desserts" onChange={this.handleRadio} label="Desserts" />
                     <Form.Check 
-                    name="beverages" onChange={this.handleRadio} label="Beverages" />
+                    name="Beverages" onChange={this.handleRadio} label="Beverages" />
                 </Form.Group>
                 <Form.Group>
                     <Form.Label>

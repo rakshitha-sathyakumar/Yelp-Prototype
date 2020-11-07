@@ -9,6 +9,9 @@ import axios from 'axios';
 import backendServer from "../../backendServer";
 import ReactPaginate from 'react-paginate';
 import './pagination.css';
+import {getRestEvents} from '../../actions/eventAction';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 class viewEvents extends Component {
     constructor(props) {
@@ -24,12 +27,13 @@ class viewEvents extends Component {
     }
 
 componentDidMount () {
-    axios.get(`${backendServer}/yelp/viewEvents/${localStorage.getItem("rest_id")}`)
-    .then(res => {
-        //console.log(res.data)
-        this.setState({ eventList: res.data });
-        //console.log(this.state.appetizerList);
-    });
+    this.props.getRestEvents();
+    // axios.get(`${backendServer}/yelp/viewEvents/${localStorage.getItem("rest_id")}`)
+    // .then(res => {
+    //     //console.log(res.data)
+    //     this.setState({ eventList: res.data });
+    //     //console.log(this.state.appetizerList);
+    // });
 }
 
 handleOnClick = (e) => {
@@ -40,7 +44,6 @@ handleOnClick = (e) => {
 }
 
 handlePageClick = e => {
-    alert("inside handle");
     const selectedPage = e.selected;
     const offset = selectedPage * this.state.perPage;
 
@@ -55,7 +58,7 @@ handlePageClick = e => {
 componentWillReceiveProps(nextProps){
     this.setState({
       ...this.state,
-      eventList : !nextProps.eventList ? this.state.eventList : nextProps.eventList,
+      eventList : !nextProps.event ? this.props.event : nextProps.event,
       pageCount: Math.ceil(this.state.eventList.length / this.state.perPage)  
     }
    );	
@@ -63,9 +66,9 @@ componentWillReceiveProps(nextProps){
 
     render() {
 
-        console.log(this.state.eventList);
+        console.log(this.props);
 
-        const count = this.state.eventList.length;
+        const count = this.props.event.length;
         const slice = this.state.eventList.slice(this.state.offset, this.state.offset + this.state.perPage);
 
         let paginationElement = (
@@ -73,7 +76,7 @@ componentWillReceiveProps(nextProps){
               previousLabel={"← Previous"}
               nextLabel={"Next →"}
               breakLabel={<span className="gap">...</span>}
-              pageCount={Math.ceil(this.state.eventList.length / this.state.perPage) > 0 ? Math.ceil(this.state.eventList.length / this.state.perPage) : 10}
+              pageCount={Math.ceil(this.state.eventList.length / this.state.perPage) > 0 ? Math.ceil(this.state.eventList.length / this.state.perPage) : 1}
               onPageChange={this.handlePageClick}
               forcePage={this.state.currentPage}
               containerClassName={"pagination"}
@@ -86,7 +89,6 @@ componentWillReceiveProps(nextProps){
 
 
         let renderEvents;
-        console.log(this.state.eventList);
         if(this.state.eventList) {
         renderEvents = slice.map((event, key) => {
             return (
@@ -131,4 +133,15 @@ componentWillReceiveProps(nextProps){
         )}
 }
 
-export default viewEvents;
+viewEvents.propTypes = {
+    getRestEvents: PropTypes.func.isRequired,
+    event: PropTypes.object.isRequired
+  };
+
+  const mapStateToProps = state => ({
+    event: state.events.event
+
+  });
+
+  export default connect(mapStateToProps, { getRestEvents })(viewEvents);
+//export default viewEvents;
