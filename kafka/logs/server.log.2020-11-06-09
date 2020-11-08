@@ -1,0 +1,9 @@
+[2020-11-06 09:38:39,304] WARN caught end of stream exception (org.apache.zookeeper.server.NIOServerCnxn)
+EndOfStreamException: Unable to read additional data from client sessionid 0x1759c2d69b6003a, likely client has closed socket
+	at org.apache.zookeeper.server.NIOServerCnxn.doIO(NIOServerCnxn.java:239)
+	at org.apache.zookeeper.server.NIOServerCnxnFactory.run(NIOServerCnxnFactory.java:203)
+	at java.base/java.lang.Thread.run(Thread.java:830)
+[2020-11-06 09:38:39,352] INFO Closed socket connection for client /0:0:0:0:0:0:0:1:65146 which had sessionid 0x1759c2d69b6003a (org.apache.zookeeper.server.NIOServerCnxn)
+[2020-11-06 09:38:39,705] INFO Accepted socket connection from /127.0.0.1:50113 (org.apache.zookeeper.server.NIOServerCnxnFactory)
+[2020-11-06 09:38:39,706] INFO Client attempting to renew session 0x1759c2d69b6003a at /127.0.0.1:50113 (org.apache.zookeeper.server.ZooKeeperServer)
+[2020-11-06 09:38:39,708] INFO Established session 0x1759c2d69b6003a with negotiated timeout 6000 for client /127.0.0.1:50113 (org.apache.zookeeper.server.ZooKeeperServer)

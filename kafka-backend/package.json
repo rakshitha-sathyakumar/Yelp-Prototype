@@ -10,6 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "expres": "0.0.5",
+    "express": "^4.17.1",
+    "kafka-node": "^5.0.0",
+    "mongoose": "^5.10.13",
+    "node-zookeeper-client": "^1.1.0",
     "react-modal": "^3.11.2",
     "react-paginate": "^6.5.0"
   }

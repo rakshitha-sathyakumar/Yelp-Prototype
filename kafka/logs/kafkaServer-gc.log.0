@@ -1,0 +1,11 @@
+[2020-11-07T17:50:43.380+0800][gc,heap] Heap region size: 1M
+[2020-11-07T17:50:43.388+0800][gc     ] Using G1
+[2020-11-07T17:50:43.388+0800][gc,heap,coops] Heap address: 0x00000007c0000000, size: 1024 MB, Compressed Oops mode: Zero based, Oop shift amount: 3
+[2020-11-07T17:50:43.389+0800][gc,cds       ] Mark closed archive regions in map: [0x00000007fff00000, 0x00000007fff76ff8]
+[2020-11-07T17:50:43.389+0800][gc,cds       ] Mark open archive regions in map: [0x00000007ffe00000, 0x00000007ffe46ff8]
+[2020-11-07T17:50:43.403+0800][gc           ] Periodic GC disabled
+[2020-11-07T17:50:50.081+0800][gc,heap,exit ] Heap
+[2020-11-07T17:50:50.081+0800][gc,heap,exit ]  garbage-first heap   total 1048576K, used 36600K [0x00000007c0000000, 0x0000000800000000)
+[2020-11-07T17:50:50.081+0800][gc,heap,exit ]   region size 1024K, 36 young (36864K), 0 survivors (0K)
+[2020-11-07T17:50:50.081+0800][gc,heap,exit ]  Metaspace       used 11814K, capacity 12083K, committed 12416K, reserved 1060864K
+[2020-11-07T17:50:50.081+0800][gc,heap,exit ]   class space    used 1694K, capacity 1796K, committed 1920K, reserved 1048576K

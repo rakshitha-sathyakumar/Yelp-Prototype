@@ -1,0 +1,6 @@
+[2020-11-02 17:10:47,812] INFO The cleaning for partition test_topic-0 is aborted and paused (kafka.log.LogCleaner)
+[2020-11-02 17:10:47,823] INFO Compaction for partition test_topic-0 is resumed (kafka.log.LogCleaner)
+[2020-11-02 17:10:47,823] INFO The cleaning for partition test_topic-0 is aborted (kafka.log.LogCleaner)
+[2020-11-02 17:11:03,900] INFO The cleaning for partition review_topic-0 is aborted and paused (kafka.log.LogCleaner)
+[2020-11-02 17:11:03,901] INFO Compaction for partition review_topic-0 is resumed (kafka.log.LogCleaner)
+[2020-11-02 17:11:03,901] INFO The cleaning for partition review_topic-0 is aborted (kafka.log.LogCleaner)
