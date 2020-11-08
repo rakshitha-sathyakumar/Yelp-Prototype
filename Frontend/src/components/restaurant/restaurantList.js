@@ -208,11 +208,11 @@ componentWillReceiveProps(nextProps){
             <CardGroup>
                 {renderRest}
             </CardGroup> 
-            </div>
-            {/* <MapContainer restaurantlist={this.state.restList}></MapContainer>  */}
-            </div>
             <div style={{paddingLeft: "45%"}}>
               {paginationElement}
+            </div>
+            </div>
+            <MapContainer restaurantlist={this.state.restList}></MapContainer> 
             </div>
             </React.Fragment>
         )}
