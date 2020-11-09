@@ -3,8 +3,9 @@ const router = express.Router();
 // const passwordHash = require('password-hash');
 const pool = require('../pool.js');
 var kafka = require('../kafka/client');
+const { checkAuth } = require('../Utils/passport');
 
-router.post('/', (req, res) => {
+router.post('/', checkAuth, (req, res) => {
   console.log("I am in the backend post method")
   console.log(req.body.rest_id);
   console.log("Byeee")

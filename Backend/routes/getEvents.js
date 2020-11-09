@@ -3,9 +3,10 @@ const router = express.Router();
 const passwordHash = require('password-hash');
 const pool = require('../pool.js');
 var kafka = require('../kafka/client');
+const { checkAuth } = require('../Utils/passport');
 
 
-router.get('/:rest_id', (req, res) => {
+router.get('/:rest_id',  (req, res) => {
   console.log(req.params.rest_id)
   kafka.make_request("events_topic", { "path": "getRestEvents", "body": req.params.rest_id }, function (err, results) {
     console.log(results);
@@ -65,7 +66,7 @@ router.get('/eventDetails/:event_id', (req,res) => {
   })
 })
 
-router.get('/user/:user_id', (req, res) => {
+router.get('/user/:user_id', checkAuth, (req, res) => {
   console.log(req.params.user_id)
   kafka.make_request("events_topic", { "path": "userRegistration", "id": req.params.user_id}, function (err, results) {
     console.log(results);

@@ -3,6 +3,7 @@ const router = express.Router();
 const passwordHash = require('password-hash');
 const pool = require('../pool.js');
 var kafka = require('../kafka/client');
+const { checkAuth } = require('../Utils/passport');
 
 router.get('/:user_id', (req, res) => {
   console.log(req.params.user_id);
@@ -46,7 +47,7 @@ router.post('/update/:user_id', (req, res) => {
   });
 
 
-  router.post('/updateProfilePic', (req, res) => {
+  router.post('/updateProfilePic', checkAuth, (req, res) => {
 
     console.log("Hi i am in San Jose");
     console.log(req.body.user_id);

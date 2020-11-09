@@ -6,8 +6,7 @@ const jwt = require('jsonwebtoken');
 // const pool = require('../pool.js');
 var kafka = require('../kafka/client');
 const { secret } = require('../Utils/config');
-const { auth } = require('../Utils/passport');
-auth();
+const { checkAuth } = require('../Utils/passport');
 
 // var app = express();
 

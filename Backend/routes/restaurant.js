@@ -3,6 +3,7 @@ const router = express.Router();
 const passwordHash = require('password-hash');
 const pool = require('../pool.js');
 var kafka = require('../kafka/client');
+const { checkAuth } = require('../Utils/passport');
 
 router.get('/:rest_id', (req, res) => {
   console.log(req.params.rest_id);
@@ -24,7 +25,7 @@ router.get('/:rest_id', (req, res) => {
   })
 })
 
-router.post('/update/:rest_id', (req, res) => {
+router.post('/update/:rest_id', checkAuth, (req, res) => {
   console.log(req.params.rest_id);
   kafka.make_request("restSignUp_topic", { "path": "restUpdate", "body": req.body, "restId": req.params.rest_id }, function (err, results) {
     console.log(results);
