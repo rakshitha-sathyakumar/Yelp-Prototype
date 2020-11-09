@@ -4,6 +4,9 @@ import axios from "axios";
 import backendServer from "../backendServer";
 
  export const addEvent = (data) => dispatch => {
+    axios.defaults.headers.common['authorization'] = localStorage.getItem(
+        'token',
+      );
     axios.defaults.withCredentials = true;
     axios.post(`${backendServer}/yelp/addEvent`,data)
         .then(response => dispatch({
@@ -45,6 +48,9 @@ export const getAllevents = () => dispatch => {
 
 
 export const getUserReglist = () => dispatch => {
+    axios.defaults.headers.common['authorization'] = localStorage.getItem(
+        'token',
+      );
     axios.get(`${backendServer}/yelp/viewEvents/user/${localStorage.getItem("user_id")}`)
         .then(response => dispatch({
             type: GET_USERREGLIST,

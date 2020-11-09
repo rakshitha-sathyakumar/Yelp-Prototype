@@ -9,6 +9,9 @@ axios.defaults.headers.common['authorization'] = localStorage.getItem(
 
 export const addDish = (dishData) => dispatch => {
     axios.defaults.withCredentials = true;
+    axios.defaults.headers.common['authorization'] = localStorage.getItem(
+        'token',
+      );
     axios.post(`${backendServer}/yelp/addDish`,dishData)
         .then(response => dispatch({
             type: ADD_DISH,
@@ -43,6 +46,9 @@ export const getDish = (restId, dishId) => dispatch => {
 }
 
 export const updateDish = (dishData) => dispatch => {
+    axios.defaults.headers.common['authorization'] = localStorage.getItem(
+        'token',
+      );
     axios.defaults.withCredentials = true;
     axios.post(`${backendServer}/yelp/editDish`,dishData)
     .then(response => dispatch({

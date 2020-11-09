@@ -14,6 +14,9 @@ export const getUser = () => dispatch => {
 }
 
 export const updateUser = (userProfileData) => dispatch => {
+    axios.defaults.headers.common['authorization'] = localStorage.getItem(
+        'token',
+      );
     axios.defaults.withCredentials = true;
     axios.post(`${backendServer}/yelp/userProfile/update/${localStorage.getItem("user_id")}`, userProfileData)
         .then(response => dispatch({
@@ -32,6 +35,9 @@ export const updateUser = (userProfileData) => dispatch => {
 }
 
 export const updateProfilePic = (userProfileData) => dispatch => {
+    axios.defaults.headers.common['authorization'] = localStorage.getItem(
+        'token',
+      );
     axios.defaults.withCredentials = true;
     axios.post(`${backendServer}/yelp/userProfile/updateProfilePic`, userProfileData)
         .then(response => dispatch({
