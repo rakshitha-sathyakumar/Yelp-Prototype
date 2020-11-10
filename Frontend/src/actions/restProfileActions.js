@@ -14,6 +14,9 @@ export const getRest = () => dispatch => {
 }
 
 export const updateRest = (restProfileData) => dispatch => {
+    axios.defaults.headers.common['authorization'] = localStorage.getItem(
+        'token',
+      );
     axios.defaults.withCredentials = true;
     axios.post(`${backendServer}/yelp/restProfile/update/${localStorage.getItem("rest_id")}`, restProfileData)
         .then(response => dispatch({

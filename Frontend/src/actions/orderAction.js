@@ -3,6 +3,9 @@ import axios from "axios";
 import backendServer from "../backendServer";
 
 export const getRestOrder = () => dispatch => {
+    axios.defaults.headers.common['authorization'] = localStorage.getItem(
+        'token',
+      );
     axios.get(`${backendServer}/yelp/order/rest/${localStorage.getItem("rest_id")}`)
         .then(response => dispatch({
             type: GET_RESTORDER,
@@ -33,6 +36,9 @@ export const addOrder = (data) => dispatch => {
 
 export const updateOrderStatus = (data) => dispatch => {
     axios.defaults.withCredentials = true;
+    axios.defaults.headers.common['authorization'] = localStorage.getItem(
+        'token',
+      );
     axios.post(`${backendServer}/yelp/order/update`,data)
     .then(response => dispatch({
         type: UPDATE_ORDERSTATUS,
@@ -50,6 +56,9 @@ export const updateOrderStatus = (data) => dispatch => {
 }
 
 export const getUserOrder = () => dispatch => {
+    axios.defaults.headers.common['authorization'] = localStorage.getItem(
+        'token',
+      );
     axios.get(`${backendServer}/yelp/order/${localStorage.getItem("user_id")}`)
         .then(response => dispatch({
             type: GET_USERORDER,
@@ -62,6 +71,9 @@ export const getUserOrder = () => dispatch => {
 
 export const sendMessage = (data) => dispatch => {
     axios.defaults.withCredentials = true;
+    axios.defaults.headers.common['authorization'] = localStorage.getItem(
+        'token',
+      );
     axios.post(`${backendServer}/yelp/messages/initiate`, data)
     .then(response => dispatch({
         type: MESSAGE_SENT,

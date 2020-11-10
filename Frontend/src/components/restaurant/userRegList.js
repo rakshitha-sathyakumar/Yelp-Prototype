@@ -19,6 +19,9 @@ export class getRegUserList extends Component {
 
     componentDidMount() {
         console.log()
+        axios.defaults.headers.common['authorization'] = localStorage.getItem(
+            'token',
+          );
         axios.get(`${backendServer}/yelp/regUser/${this.props.match.params.event_id}`)
         .then(res => {
             this.setState({ regUserList: res.data });

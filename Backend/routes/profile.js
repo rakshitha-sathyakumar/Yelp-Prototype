@@ -26,7 +26,7 @@ router.get('/:user_id', (req, res) => {
 })
 
 
-router.post('/update/:user_id', (req, res) => {
+router.post('/update/:user_id', checkAuth, (req, res) => {
   console.log(req.params.user_id)
   kafka.make_request("userSignUp_topic", { "path": "userUpdate", "body": req.body, "userId": req.params.user_id }, function (err, results) {
     console.log(results);

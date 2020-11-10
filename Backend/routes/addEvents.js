@@ -45,23 +45,4 @@ router.post('/', checkAuth, (req, res) => {
     })
     })
 
-  // router.post('/', checkAuth, (req, res) => {
-  //   kafka.make_request("events_topic", { "path": "createEvent", "body": req.body }, function (err, results) {
-  //   console.log("In make request call back");
-  //   console.log(results);
-  //   if (err) {
-  //     console.log("Inside err");
-  //     console.log(err);
-  //     return res.status(err.status).send(err.message);
-  //   } else {
-  //     console.log("Inside else", results);
-  //     if (results.status === 200) {
-  //       return res.end(results.message);
-  //     } else {
-  //       return res.end(results.message);
-  //     }
-  //   }
-  // })
-  // })
-
 module.exports = router;

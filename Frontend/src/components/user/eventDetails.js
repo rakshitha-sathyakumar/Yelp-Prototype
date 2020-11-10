@@ -25,7 +25,11 @@ export class eventDetails extends Component {
             lastName: localStorage.getItem("last_name"),
             userId: localStorage.getItem("user_id")
         }
+        axios.defaults.headers.common['authorization'] = localStorage.getItem(
+            'token',
+          );
         return axios.post(`${backendServer}/yelp/addEvent/update`,data)
+
         .then((response) => {
             if (response.status === 200) {
                 alert("Registered successfully")
