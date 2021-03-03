@@ -1,6 +1,6 @@
 # Yelp Prototype
 
-Scalable and distributed prototype of Yelp app.
+Scalable and distributed replica of Yelp application.
 
 ### Tech Stack:
 
