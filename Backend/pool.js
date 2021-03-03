@@ -3,10 +3,10 @@ const myPort = 3306;
 const pool = mysql.createPool({
     connectionLimit: 100,
     host: 'localhost',
-    user: 'root',
+    user: 'ADD YOUR USERNAME',
     port: myPort,
-    password: 'password',
-    database: 'react_sql'
+    password: 'ADD YOUR PASSWORD',
+    database: 'ADD YOUR DB NAME'
 });
 
 // const pool = mysql.createConnection({
